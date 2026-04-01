@@ -1,0 +1,5 @@
+{
+  "enabledPlugins": {
+    "umbraco-cms-backoffice-skills@umbraco-backoffice-marketplace": true
+  }
+}
