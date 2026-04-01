@@ -1,0 +1,40 @@
+using Microsoft.Extensions.DependencyInjection;
+using Umbraco.Cms.Core.Composing;
+using Umbraco.Cms.Core.DependencyInjection;
+using Umbraco.Extensions;
+using Umbraco.SecurityDashboard.Scheduling;
+using Umbraco.SecurityDashboard.Services;
+
+namespace Umbraco.SecurityDashboard.Composers;
+
+public class SecurityDashboardComposer : IComposer
+{
+    public void Compose(IUmbracoBuilder builder)
+    {
+        // Data access
+        builder.Services.AddSingleton<IVulnerabilityCheckRepository, VulnerabilityCheckRepository>();
+
+        // GitHub advisory client
+        builder.Services.AddSingleton<IGitHubAdvisoryClient, GitHubAdvisoryClient>();
+
+        // Installed package provider
+        builder.Services.AddSingleton<IInstalledPackageProvider, InstalledPackageProvider>();
+
+        // Vulnerability service
+        builder.Services.AddSingleton<IVulnerabilityService, VulnerabilityService>();
+
+        // Named HTTP client for GitHub Advisory API
+        builder.Services.AddHttpClient("GitHubAdvisories", client =>
+        {
+            client.DefaultRequestHeaders.Add("User-Agent", "Umbraco-SecurityDashboard/1.0");
+            client.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
+            client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
+        });
+
+        // Recurring background task for scheduled vulnerability checks
+        builder.Services.AddRecurringBackgroundJob<VulnerabilityCheckTask>();
+
+        // Database migration plan
+        builder.PackageMigrationPlans().Add<Migrations.SecurityDashboardMigrationPlan>();
+    }
+}

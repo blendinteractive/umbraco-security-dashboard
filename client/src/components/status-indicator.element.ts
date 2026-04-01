@@ -1,0 +1,46 @@
+import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+
+@customElement('security-dashboard-status-indicator')
+export class StatusIndicatorElement extends LitElement {
+  @property({ type: String }) overallStatus: 'Safe' | 'Vulnerable' | 'NeverChecked' = 'NeverChecked';
+  @property({ type: Number }) affectedAdvisoryCount = 0;
+
+  static styles = css`
+    :host { display: block; }
+    .status-safe { color: var(--uui-color-positive, #00a152); display: flex; align-items: center; gap: 8px; }
+    .status-vulnerable { color: var(--uui-color-danger, #d0011b); display: flex; align-items: center; gap: 8px; }
+    .status-neutral { color: var(--uui-color-text, #333); display: flex; align-items: center; gap: 8px; }
+    .status-label { font-size: 1.2rem; font-weight: 600; }
+  `;
+
+  render() {
+    if (this.overallStatus === 'Safe') {
+      return html`
+        <div class="status-safe">
+          <uui-icon name="check-circle" style="font-size: 2rem;"></uui-icon>
+          <span class="status-label">No Active Vulnerabilities</span>
+        </div>
+      `;
+    }
+
+    if (this.overallStatus === 'Vulnerable') {
+      return html`
+        <div class="status-vulnerable">
+          <uui-icon name="alert" style="font-size: 2rem;"></uui-icon>
+          <span class="status-label">
+            ${this.affectedAdvisoryCount} Active
+            ${this.affectedAdvisoryCount === 1 ? 'Vulnerability' : 'Vulnerabilities'} Found
+          </span>
+        </div>
+      `;
+    }
+
+    return html`
+      <div class="status-neutral">
+        <uui-icon name="info" style="font-size: 2rem;"></uui-icon>
+        <span class="status-label">Not yet checked</span>
+      </div>
+    `;
+  }
+}

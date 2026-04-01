@@ -1,0 +1,23 @@
+export interface AdvisoryDto {
+  ghsaId: string;
+  title: string;
+  severity: 'Critical' | 'High' | 'Moderate' | 'Low';
+  packageName: string;
+  affectedVersionRange: string;
+  advisoryUrl: string;
+  publishedAt: string;
+  installedVersion: string | null;
+  affectedStatus: 'Affected' | 'NotAffected' | 'Unknown';
+}
+
+export interface DashboardStatusResponse {
+  overallStatus: 'Safe' | 'Vulnerable' | 'NeverChecked';
+  isStale: boolean;
+  lastSuccessfulCheckAt: string | null;
+  lastCheckAttemptAt: string | null;
+  lastCheckSucceeded: boolean | null;
+  lastCheckError: string | null;
+  nextScheduledCheckAt: string;
+  affectedAdvisoryCount: number;
+  advisories: AdvisoryDto[];
+}

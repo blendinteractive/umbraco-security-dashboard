@@ -1,0 +1,24 @@
+{
+  "$schema": "https://appsettings.umbraco.com/umbraco-package-schema.json",
+  "name": "Security Dashboard",
+  "version": "1.0.0",
+  "extensions": [
+    {
+      "type": "dashboard",
+      "alias": "Umb.Dashboard.SecurityDashboard",
+      "name": "Security Dashboard",
+      "element": "/App_Plugins/SecurityDashboard/dist/security-dashboard.js",
+      "weight": 100,
+      "meta": {
+        "label": "Security Dashboard",
+        "pathname": "security-dashboard"
+      },
+      "conditions": [
+        {
+          "alias": "Umb.Condition.SectionAlias",
+          "match": "Umb.Section.Settings"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>Umbraco.SecurityDashboard</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Security Dashboard Contributors</Authors>
+    <Description>Umbraco backoffice dashboard that displays known CVE advisories for installed Umbraco packages.</Description>
+    <PackageTags>umbraco;security;vulnerability;dashboard</PackageTags>
+    <IsPackable>true</IsPackable>
+    <StaticWebAssetBasePath>/</StaticWebAssetBasePath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Umbraco.Cms" Version="17.*" />
+    <PackageReference Include="NuGet.Versioning" Version="6.*" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.*" />
+  </ItemGroup>
+
+
+</Project>
