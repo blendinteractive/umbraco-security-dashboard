@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
+using Umbraco.Cms.Core.Notifications;
 using Umbraco.Extensions;
 using Umbraco.SecurityDashboard.Scheduling;
 using Umbraco.SecurityDashboard.Services;
@@ -33,6 +34,9 @@ public class SecurityDashboardComposer : IComposer
 
         // Recurring background task for scheduled vulnerability checks
         builder.Services.AddRecurringBackgroundJob<VulnerabilityCheckTask>();
+
+        // Startup check: run immediately if last successful check is older than CheckInterval
+        builder.AddNotificationAsyncHandler<UmbracoApplicationStartedNotification, StartupVulnerabilityCheckHandler>();
 
         // Database migration plan
         builder.PackageMigrationPlans().Add<Migrations.SecurityDashboardMigrationPlan>();

@@ -1,0 +1,16 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Umbraco Demo Site",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "demo/demo.csproj"],
+      "port": 44394
+    },
+    {
+      "name": "Vite Frontend (watch)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "client"]
+    }
+  ]
+}

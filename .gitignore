@@ -37,3 +37,8 @@ Thumbs.db
 .idea/
 *.swp
 *.tmp
+
+# Claude Code (local agent state — not project config)
+.claude/worktrees/
+.claude/launch.json
+.claude/settings.local.json
