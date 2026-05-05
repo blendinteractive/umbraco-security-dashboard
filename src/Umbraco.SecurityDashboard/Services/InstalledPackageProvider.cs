@@ -22,10 +22,23 @@ public class InstalledPackageProvider : IInstalledPackageProvider
 
             var rootName = StripSuffix(name);
 
+            // Index by root name (e.g. "Umbraco.Cms") so advisories for the
+            // meta-package are found even though only sub-package DLLs are loaded.
             if (!result.TryGetValue(rootName, out var existing) ||
                 IsHigherVersion(version, existing))
             {
                 result[rootName] = version;
+            }
+
+            // Also index by the original assembly name (e.g. "Umbraco.Cms.Core")
+            // so advisories that reference the specific sub-package are also found.
+            if (!rootName.Equals(name, StringComparison.OrdinalIgnoreCase))
+            {
+                if (!result.TryGetValue(name, out var existingOrig) ||
+                    IsHigherVersion(version, existingOrig))
+                {
+                    result[name] = version;
+                }
             }
         }
 
