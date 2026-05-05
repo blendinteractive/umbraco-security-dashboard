@@ -3,6 +3,7 @@ using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Notifications;
 using Umbraco.Extensions;
+using Umbraco.SecurityDashboard.Configuration;
 using Umbraco.SecurityDashboard.Scheduling;
 using Umbraco.SecurityDashboard.Services;
 
@@ -12,6 +13,10 @@ public class SecurityDashboardComposer : IComposer
 {
     public void Compose(IUmbracoBuilder builder)
     {
+        // Settings
+        builder.Services.Configure<SecurityDashboardSettings>(
+            builder.Config.GetSection(SecurityDashboardSettings.SectionName));
+
         // Data access
         builder.Services.AddSingleton<IVulnerabilityCheckRepository, VulnerabilityCheckRepository>();
 

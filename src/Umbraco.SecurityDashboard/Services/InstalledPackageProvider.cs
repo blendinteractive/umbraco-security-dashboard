@@ -1,20 +1,33 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyModel;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Umbraco.SecurityDashboard.Configuration;
 
 namespace Umbraco.SecurityDashboard.Services;
 
-public class InstalledPackageProvider : IInstalledPackageProvider
+public class InstalledPackageProvider(IHostEnvironment hostEnvironment, IOptions<SecurityDashboardSettings> settings)
+    : IInstalledPackageProvider
 {
     private static readonly string[] SuffixesToStrip = [".Core", ".Web", ".Infrastructure"];
 
     public IReadOnlyDictionary<string, string> GetInstalledUmbracoPackages()
     {
         var ctx = DependencyContext.Default;
-        if (ctx != null)
-            return GetFromDependencyContext(ctx);
+        var packages = ctx != null
+            ? GetFromDependencyContext(ctx)
+            : GetFromAssemblies();
 
-        // Fallback for single-file publish or unusual host scenarios
-        return GetFromAssemblies();
+        if (hostEnvironment.IsDevelopment())
+            ApplyOverrides(packages);
+
+        return packages;
+    }
+
+    private void ApplyOverrides(Dictionary<string, string> packages)
+    {
+        foreach (var (name, version) in settings.Value.PackageVersionOverrides)
+            packages[name] = version;
     }
 
     private static Dictionary<string, string> GetFromDependencyContext(DependencyContext ctx)
