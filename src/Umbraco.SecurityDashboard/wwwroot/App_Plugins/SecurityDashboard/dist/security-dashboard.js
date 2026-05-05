@@ -755,12 +755,12 @@ let q = class extends $ {
           </div>
         </div>
         <div class="badges">
-          <uui-badge color="${this.getSeverityColor(this.advisory.severity)}">
+          <uui-tag color="${this.getSeverityColor(this.advisory.severity)}">
             ${this.advisory.severity}
-          </uui-badge>
-          <uui-badge color="${this.getStatusColor(this.advisory.affectedStatus)}">
+          </uui-tag>
+          <uui-tag color="${this.getStatusColor(this.advisory.affectedStatus)}">
             ${this.advisory.affectedStatus === "NotAffected" ? "Not Affected" : this.advisory.affectedStatus}
-          </uui-badge>
+          </uui-tag>
         </div>
         <uui-button
           look="secondary"
