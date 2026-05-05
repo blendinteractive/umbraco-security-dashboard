@@ -1,4 +1,5 @@
 using System.Reflection;
+using Microsoft.Extensions.DependencyModel;
 
 namespace Umbraco.SecurityDashboard.Services;
 
@@ -7,6 +8,40 @@ public class InstalledPackageProvider : IInstalledPackageProvider
     private static readonly string[] SuffixesToStrip = [".Core", ".Web", ".Infrastructure"];
 
     public IReadOnlyDictionary<string, string> GetInstalledUmbracoPackages()
+    {
+        var ctx = DependencyContext.Default;
+        if (ctx != null)
+            return GetFromDependencyContext(ctx);
+
+        // Fallback for single-file publish or unusual host scenarios
+        return GetFromAssemblies();
+    }
+
+    private static Dictionary<string, string> GetFromDependencyContext(DependencyContext ctx)
+    {
+        var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var lib in ctx.RuntimeLibraries)
+        {
+            if (!lib.Name.StartsWith("Umbraco.", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            if (string.IsNullOrEmpty(lib.Version))
+                continue;
+
+            // Strip build metadata (+...) that can appear in informational versions
+            var version = lib.Version;
+            var plusIndex = version.IndexOf('+');
+            if (plusIndex >= 0)
+                version = version[..plusIndex];
+
+            result[lib.Name] = version;
+        }
+
+        return result;
+    }
+
+    private static Dictionary<string, string> GetFromAssemblies()
     {
         var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
@@ -22,23 +57,13 @@ public class InstalledPackageProvider : IInstalledPackageProvider
 
             var rootName = StripSuffix(name);
 
-            // Index by root name (e.g. "Umbraco.Cms") so advisories for the
-            // meta-package are found even though only sub-package DLLs are loaded.
-            if (!result.TryGetValue(rootName, out var existing) ||
-                IsHigherVersion(version, existing))
-            {
+            if (!result.TryGetValue(rootName, out var existing) || IsHigherVersion(version, existing))
                 result[rootName] = version;
-            }
 
-            // Also index by the original assembly name (e.g. "Umbraco.Cms.Core")
-            // so advisories that reference the specific sub-package are also found.
             if (!rootName.Equals(name, StringComparison.OrdinalIgnoreCase))
             {
-                if (!result.TryGetValue(name, out var existingOrig) ||
-                    IsHigherVersion(version, existingOrig))
-                {
+                if (!result.TryGetValue(name, out var existingOrig) || IsHigherVersion(version, existingOrig))
                     result[name] = version;
-                }
             }
         }
 
@@ -53,7 +78,6 @@ public class InstalledPackageProvider : IInstalledPackageProvider
 
         if (!string.IsNullOrEmpty(infoVersion))
         {
-            // Strip build metadata (+...) for clean version string
             var plusIndex = infoVersion.IndexOf('+');
             return plusIndex >= 0 ? infoVersion[..plusIndex] : infoVersion;
         }
