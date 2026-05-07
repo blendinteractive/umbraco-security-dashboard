@@ -10,4 +10,6 @@ public class SecurityDashboardSettings
     /// </summary>
     public Dictionary<string, string> PackageVersionOverrides { get; set; } =
         new(StringComparer.OrdinalIgnoreCase);
+
+    public WebhookSettings Webhook { get; set; } = new();
 }

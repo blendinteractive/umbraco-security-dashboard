@@ -37,6 +37,23 @@ public class SecurityDashboardComposer : IComposer
             client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
         });
 
+        // Webhook notifier
+        builder.Services.AddSingleton<IWebhookNotifier, WebhookNotifier>();
+
+        var timeoutStr = builder.Config
+            .GetSection(SecurityDashboardSettings.SectionName)["Webhook:TimeoutSeconds"];
+        if (!int.TryParse(timeoutStr, out var webhookTimeoutSeconds) || webhookTimeoutSeconds <= 0)
+            webhookTimeoutSeconds = 10;
+
+        builder.Services.AddHttpClient("WebhookNotifier", client =>
+        {
+            client.Timeout = TimeSpan.FromSeconds(webhookTimeoutSeconds);
+        })
+        .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+        {
+            AllowAutoRedirect = false
+        });
+
         // Recurring background task for scheduled vulnerability checks
         builder.Services.AddRecurringBackgroundJob<VulnerabilityCheckTask>();
 
