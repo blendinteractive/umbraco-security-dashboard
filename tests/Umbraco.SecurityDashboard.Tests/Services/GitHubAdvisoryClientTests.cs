@@ -49,7 +49,7 @@ public class GitHubAdvisoryClientTests
         });
 
         var sut = new GitHubAdvisoryClient(factory, NullLogger<GitHubAdvisoryClient>.Instance);
-        var result = await sut.GetUmbracoAdvisoriesAsync();
+        var result = await sut.GetUmbracoAdvisoriesAsync(["Umbraco.Cms"]);
 
         Assert.Single(result);
         Assert.Equal("GHSA-1234-5678-abcd", result[0].GhsaId);
@@ -58,38 +58,17 @@ public class GitHubAdvisoryClientTests
     }
 
     [Fact]
-    public async Task GetUmbracoAdvisoriesAsync_FiltersNonUmbracoPackages()
+    public async Task GetUmbracoAdvisoriesAsync_EmptyPackageNames_ReturnsEmptyWithoutHttpCall()
     {
-        var json = JsonSerializer.Serialize(new[]
-        {
-            new
-            {
-                ghsa_id = "GHSA-aaaa-bbbb-cccc",
-                summary = "Non-Umbraco",
-                severity = "low",
-                published_at = "2024-01-01T00:00:00Z",
-                html_url = "https://example.com",
-                vulnerabilities = new[]
-                {
-                    new
-                    {
-                        package = new { ecosystem = "nuget", name = "SomeOther.Package" },
-                        vulnerable_version_range = "< 1.0.0",
-                        first_patched_version = "1.0.0"
-                    }
-                }
-            }
-        });
-
-        var factory = CreateFactory(new HttpResponseMessage(HttpStatusCode.OK)
-        {
-            Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
-        });
+        // Filtering is server-side via the affects[] query param. When no package names are
+        // provided there is nothing to query for, so the client should return immediately.
+        var factory = Substitute.For<IHttpClientFactory>(); // never called
 
         var sut = new GitHubAdvisoryClient(factory, NullLogger<GitHubAdvisoryClient>.Instance);
-        var result = await sut.GetUmbracoAdvisoriesAsync();
+        var result = await sut.GetUmbracoAdvisoriesAsync([]);
 
         Assert.Empty(result);
+        factory.DidNotReceiveWithAnyArgs().CreateClient(default!);
     }
 
     [Fact]
@@ -134,7 +113,7 @@ public class GitHubAdvisoryClientTests
 
         var factory = CreateFactory(response1, response2);
         var sut = new GitHubAdvisoryClient(factory, NullLogger<GitHubAdvisoryClient>.Instance);
-        var result = await sut.GetUmbracoAdvisoriesAsync();
+        var result = await sut.GetUmbracoAdvisoriesAsync(["Umbraco.Cms"]);
 
         Assert.Equal(2, result.Count);
     }
@@ -152,7 +131,7 @@ public class GitHubAdvisoryClientTests
         cts.Cancel();
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(
-            () => sut.GetUmbracoAdvisoriesAsync(cts.Token));
+            () => sut.GetUmbracoAdvisoriesAsync(["Umbraco.Cms"], cts.Token));
     }
 
     private class QueuedMessageHandler : HttpMessageHandler

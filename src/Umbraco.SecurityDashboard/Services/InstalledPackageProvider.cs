@@ -13,10 +13,14 @@ public class InstalledPackageProvider(IHostEnvironment hostEnvironment, IOptions
 
     public IReadOnlyDictionary<string, string> GetInstalledUmbracoPackages()
     {
+        var additionalIds = new HashSet<string>(
+            settings.Value.AdditionalPackageIds,
+            StringComparer.OrdinalIgnoreCase);
+
         var ctx = DependencyContext.Default;
         var packages = ctx != null
-            ? GetFromDependencyContext(ctx)
-            : GetFromAssemblies();
+            ? GetFromDependencyContext(ctx, additionalIds)
+            : GetFromAssemblies(additionalIds);
 
         if (hostEnvironment.IsDevelopment())
             ApplyOverrides(packages);
@@ -30,13 +34,15 @@ public class InstalledPackageProvider(IHostEnvironment hostEnvironment, IOptions
             packages[name] = version;
     }
 
-    private static Dictionary<string, string> GetFromDependencyContext(DependencyContext ctx)
+    private static Dictionary<string, string> GetFromDependencyContext(DependencyContext ctx, HashSet<string> additionalIds)
     {
         var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var lib in ctx.RuntimeLibraries)
         {
-            if (!lib.Name.StartsWith("Umbraco.", StringComparison.OrdinalIgnoreCase))
+            bool isUmbraco = lib.Name.StartsWith("Umbraco.", StringComparison.OrdinalIgnoreCase);
+            bool isAdditional = additionalIds.Contains(lib.Name);
+            if (!isUmbraco && !isAdditional)
                 continue;
 
             if (string.IsNullOrEmpty(lib.Version))
@@ -54,19 +60,29 @@ public class InstalledPackageProvider(IHostEnvironment hostEnvironment, IOptions
         return result;
     }
 
-    private static Dictionary<string, string> GetFromAssemblies()
+    private static Dictionary<string, string> GetFromAssemblies(HashSet<string> additionalIds)
     {
         var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
             var name = assembly.GetName().Name;
-            if (name == null || !name.StartsWith("Umbraco.", StringComparison.OrdinalIgnoreCase))
-                continue;
+            if (name == null) continue;
+
+            bool isUmbraco = name.StartsWith("Umbraco.", StringComparison.OrdinalIgnoreCase);
+            bool isAdditional = additionalIds.Contains(name);
+            if (!isUmbraco && !isAdditional) continue;
 
             var version = GetVersion(assembly);
             if (version == null)
                 continue;
+
+            if (isAdditional && !isUmbraco)
+            {
+                if (!result.TryGetValue(name, out var existingAdd) || IsHigherVersion(version, existingAdd))
+                    result[name] = version;
+                continue;
+            }
 
             var rootName = StripSuffix(name);
 

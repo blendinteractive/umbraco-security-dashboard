@@ -11,5 +11,11 @@ public class SecurityDashboardSettings
     public Dictionary<string, string> PackageVersionOverrides { get; set; } =
         new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// Additional NuGet package IDs (non-Umbraco) to include in vulnerability checks.
+    /// Versions are detected automatically from the runtime dependency graph.
+    /// </summary>
+    public List<string> AdditionalPackageIds { get; set; } = [];
+
     public WebhookSettings Webhook { get; set; } = new();
 }
