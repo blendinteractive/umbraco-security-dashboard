@@ -15,12 +15,17 @@ public class GitHubAdvisoryClient : IGitHubAdvisoryClient
         _logger = logger;
     }
 
-    public async Task<IReadOnlyList<GitHubAdvisory>> GetUmbracoAdvisoriesAsync(CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<GitHubAdvisory>> GetUmbracoAdvisoriesAsync(IEnumerable<string> packageNames, CancellationToken cancellationToken = default)
     {
+        var names = packageNames.ToList();
+        if (names.Count == 0)
+            return [];
+
+        var affects = string.Join("&", names.Select(p => $"affects[]={Uri.EscapeDataString(p)}"));
+        var url = $"https://api.github.com/advisories?ecosystem=nuget&per_page=100&{affects}";
+
         var client = _httpClientFactory.CreateClient("GitHubAdvisories");
         var allAdvisories = new List<GitHubAdvisory>();
-
-        var url = "https://api.github.com/advisories?ecosystem=nuget&per_page=100";
 
         while (url != null)
         {
@@ -42,13 +47,7 @@ public class GitHubAdvisoryClient : IGitHubAdvisoryClient
 
             var advisories = await response.Content.ReadFromJsonAsync<List<GitHubAdvisory>>(cancellationToken: cancellationToken);
             if (advisories != null)
-            {
-                var umbracoAdvisories = advisories
-                    .Where(a => a.Vulnerabilities.Any(v => v.Package.Name.StartsWith("Umbraco.", StringComparison.OrdinalIgnoreCase)))
-                    .ToList();
-
-                allAdvisories.AddRange(umbracoAdvisories);
-            }
+                allAdvisories.AddRange(advisories);
 
             url = ParseNextLink(response.Headers.TryGetValues("Link", out var linkHeaders)
                 ? string.Join(", ", linkHeaders)

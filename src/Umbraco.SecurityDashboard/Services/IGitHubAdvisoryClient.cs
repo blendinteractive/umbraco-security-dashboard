@@ -2,5 +2,5 @@ namespace Umbraco.SecurityDashboard.Services;
 
 public interface IGitHubAdvisoryClient
 {
-    Task<IReadOnlyList<GitHubAdvisory>> GetUmbracoAdvisoriesAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<GitHubAdvisory>> GetUmbracoAdvisoriesAsync(IEnumerable<string> packageNames, CancellationToken cancellationToken = default);
 }
