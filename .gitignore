@@ -7,6 +7,7 @@ obj/
 *.sln.docstates
 packages/
 .nuget/
+demo/appsettings.Development.json
 
 # NuGet
 *.nupkg
