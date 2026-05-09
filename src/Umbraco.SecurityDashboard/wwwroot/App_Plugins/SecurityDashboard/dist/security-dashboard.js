@@ -5,8 +5,8 @@ import { UMB_AUTH_CONTEXT as Ct } from "@umbraco-cms/backoffice/auth";
  * Copyright 2019 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const V = globalThis, Y = V.ShadowRoot && (V.ShadyCSS === void 0 || V.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, tt = Symbol(), nt = /* @__PURE__ */ new WeakMap();
-let _t = class {
+const B = globalThis, Y = B.ShadowRoot && (B.ShadyCSS === void 0 || B.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, tt = Symbol(), nt = /* @__PURE__ */ new WeakMap();
+let gt = class {
   constructor(t, e, r) {
     if (this._$cssResult$ = !0, r !== tt) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
     this.cssText = t, this.t = e;
@@ -24,17 +24,17 @@ let _t = class {
     return this.cssText;
   }
 };
-const Et = (i) => new _t(typeof i == "string" ? i : i + "", void 0, tt), O = (i, ...t) => {
+const Et = (i) => new gt(typeof i == "string" ? i : i + "", void 0, tt), O = (i, ...t) => {
   const e = i.length === 1 ? i[0] : t.reduce((r, s, o) => r + ((n) => {
     if (n._$cssResult$ === !0) return n.cssText;
     if (typeof n == "number") return n;
     throw Error("Value passed to 'css' function must be a 'css' function result: " + n + ". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.");
   })(s) + i[o + 1], i[0]);
-  return new _t(e, i, tt);
+  return new gt(e, i, tt);
 }, Pt = (i, t) => {
   if (Y) i.adoptedStyleSheets = t.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
   else for (const e of t) {
-    const r = document.createElement("style"), s = V.litNonce;
+    const r = document.createElement("style"), s = B.litNonce;
     s !== void 0 && r.setAttribute("nonce", s), r.textContent = e.cssText, i.appendChild(r);
   }
 }, at = Y ? (i) => i : (i) => i instanceof CSSStyleSheet ? ((t) => {
@@ -47,7 +47,7 @@ const Et = (i) => new _t(typeof i == "string" ? i : i + "", void 0, tt), O = (i,
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const { is: Ot, defineProperty: Ut, getOwnPropertyDescriptor: Mt, getOwnPropertyNames: Tt, getOwnPropertySymbols: kt, getPrototypeOf: Nt } = Object, g = globalThis, lt = g.trustedTypes, Dt = lt ? lt.emptyScript : "", Z = g.reactiveElementPolyfillSupport, T = (i, t) => i, B = { toAttribute(i, t) {
+const { is: Ot, defineProperty: Ut, getOwnPropertyDescriptor: Mt, getOwnPropertyNames: Tt, getOwnPropertySymbols: kt, getPrototypeOf: Nt } = Object, _ = globalThis, lt = _.trustedTypes, Dt = lt ? lt.emptyScript : "", Z = _.reactiveElementPolyfillSupport, T = (i, t) => i, V = { toAttribute(i, t) {
   switch (t) {
     case Boolean:
       i = i ? Dt : null;
@@ -75,8 +75,8 @@ const { is: Ot, defineProperty: Ut, getOwnPropertyDescriptor: Mt, getOwnProperty
       }
   }
   return e;
-} }, et = (i, t) => !Ot(i, t), ct = { attribute: !0, type: String, converter: B, reflect: !1, useDefault: !1, hasChanged: et };
-Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), g.litPropertyMetadata ?? (g.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
+} }, et = (i, t) => !Ot(i, t), ct = { attribute: !0, type: String, converter: V, reflect: !1, useDefault: !1, hasChanged: et };
+Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), _.litPropertyMetadata ?? (_.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
 let C = class extends HTMLElement {
   static addInitializer(t) {
     this._$Ei(), (this.l ?? (this.l = [])).push(t);
@@ -186,7 +186,7 @@ let C = class extends HTMLElement {
     var o;
     const r = this.constructor.elementProperties.get(t), s = this.constructor._$Eu(t, r);
     if (s !== void 0 && r.reflect === !0) {
-      const n = (((o = r.converter) == null ? void 0 : o.toAttribute) !== void 0 ? r.converter : B).toAttribute(e, r.type);
+      const n = (((o = r.converter) == null ? void 0 : o.toAttribute) !== void 0 ? r.converter : V).toAttribute(e, r.type);
       this._$Em = t, n == null ? this.removeAttribute(s) : this.setAttribute(s, n), this._$Em = null;
     }
   }
@@ -194,7 +194,7 @@ let C = class extends HTMLElement {
     var o, n;
     const r = this.constructor, s = r._$Eh.get(t);
     if (s !== void 0 && this._$Em !== s) {
-      const l = r.getPropertyOptions(s), a = typeof l.converter == "function" ? { fromAttribute: l.converter } : ((o = l.converter) == null ? void 0 : o.fromAttribute) !== void 0 ? l.converter : B;
+      const l = r.getPropertyOptions(s), a = typeof l.converter == "function" ? { fromAttribute: l.converter } : ((o = l.converter) == null ? void 0 : o.fromAttribute) !== void 0 ? l.converter : V;
       this._$Em = s;
       const h = a.fromAttribute(e, l.type);
       this[s] = h ?? ((n = this._$Ej) == null ? void 0 : n.get(s)) ?? h, this._$Em = null;
@@ -280,15 +280,15 @@ let C = class extends HTMLElement {
   firstUpdated(t) {
   }
 };
-C.elementStyles = [], C.shadowRootOptions = { mode: "open" }, C[T("elementProperties")] = /* @__PURE__ */ new Map(), C[T("finalized")] = /* @__PURE__ */ new Map(), Z == null || Z({ ReactiveElement: C }), (g.reactiveElementVersions ?? (g.reactiveElementVersions = [])).push("2.1.2");
+C.elementStyles = [], C.shadowRootOptions = { mode: "open" }, C[T("elementProperties")] = /* @__PURE__ */ new Map(), C[T("finalized")] = /* @__PURE__ */ new Map(), Z == null || Z({ ReactiveElement: C }), (_.reactiveElementVersions ?? (_.reactiveElementVersions = [])).push("2.1.2");
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const k = globalThis, ht = (i) => i, W = k.trustedTypes, ut = W ? W.createPolicy("lit-html", { createHTML: (i) => i }) : void 0, gt = "$lit$", _ = `lit$${Math.random().toFixed(9).slice(2)}$`, mt = "?" + _, Ht = `<${mt}>`, S = document, N = () => S.createComment(""), D = (i) => i === null || typeof i != "object" && typeof i != "function", st = Array.isArray, jt = (i) => st(i) || typeof (i == null ? void 0 : i[Symbol.iterator]) == "function", G = `[ 	
+const k = globalThis, ht = (i) => i, W = k.trustedTypes, ut = W ? W.createPolicy("lit-html", { createHTML: (i) => i }) : void 0, _t = "$lit$", g = `lit$${Math.random().toFixed(9).slice(2)}$`, mt = "?" + g, Ht = `<${mt}>`, S = document, N = () => S.createComment(""), D = (i) => i === null || typeof i != "object" && typeof i != "function", st = Array.isArray, Rt = (i) => st(i) || typeof (i == null ? void 0 : i[Symbol.iterator]) == "function", G = `[ 	
 \f\r]`, M = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, dt = /-->/g, pt = />/g, m = RegExp(`>|${G}(?:([^\\s"'>=/]+)(${G}*=${G}*(?:[^ 	
-\f\r"'\`<>=]|("|')|))|$)`, "g"), ft = /'/g, $t = /"/g, bt = /^(?:script|style|textarea|title)$/i, Rt = (i) => (t, ...e) => ({ _$litType$: i, strings: t, values: e }), u = Rt(1), E = Symbol.for("lit-noChange"), d = Symbol.for("lit-nothing"), vt = /* @__PURE__ */ new WeakMap(), b = S.createTreeWalker(S, 129);
+\f\r"'\`<>=]|("|')|))|$)`, "g"), ft = /'/g, $t = /"/g, bt = /^(?:script|style|textarea|title)$/i, jt = (i) => (t, ...e) => ({ _$litType$: i, strings: t, values: e }), u = jt(1), E = Symbol.for("lit-noChange"), d = Symbol.for("lit-nothing"), vt = /* @__PURE__ */ new WeakMap(), b = S.createTreeWalker(S, 129);
 function At(i, t) {
   if (!st(i) || !i.hasOwnProperty("raw")) throw Error("invalid template strings array");
   return ut !== void 0 ? ut.createHTML(t) : t;
@@ -301,7 +301,7 @@ const zt = (i, t) => {
     let h, p, c = -1, v = 0;
     for (; v < a.length && (n.lastIndex = v, p = n.exec(a), p !== null); ) v = n.lastIndex, n === M ? p[1] === "!--" ? n = dt : p[1] !== void 0 ? n = pt : p[2] !== void 0 ? (bt.test(p[2]) && (s = RegExp("</" + p[2], "g")), n = m) : p[3] !== void 0 && (n = m) : n === m ? p[0] === ">" ? (n = s ?? M, c = -1) : p[1] === void 0 ? c = -2 : (c = n.lastIndex - p[2].length, h = p[1], n = p[3] === void 0 ? m : p[3] === '"' ? $t : ft) : n === $t || n === ft ? n = m : n === dt || n === pt ? n = M : (n = m, s = void 0);
     const y = n === m && i[l + 1].startsWith("/>") ? " " : "";
-    o += n === M ? a + Ht : c >= 0 ? (r.push(h), a.slice(0, c) + gt + a.slice(c) + _ + y) : a + _ + (c === -2 ? l : y);
+    o += n === M ? a + Ht : c >= 0 ? (r.push(h), a.slice(0, c) + _t + a.slice(c) + g + y) : a + g + (c === -2 ? l : y);
   }
   return [At(i, o + (i[e] || "<?>") + (t === 2 ? "</svg>" : t === 3 ? "</math>" : "")), r];
 };
@@ -317,12 +317,12 @@ class H {
     }
     for (; (s = b.nextNode()) !== null && a.length < l; ) {
       if (s.nodeType === 1) {
-        if (s.hasAttributes()) for (const c of s.getAttributeNames()) if (c.endsWith(gt)) {
-          const v = p[n++], y = s.getAttribute(c).split(_), L = /([.?@])?(.*)/.exec(v);
-          a.push({ type: 1, index: o, name: L[2], strings: y, ctor: L[1] === "." ? Lt : L[1] === "?" ? Vt : L[1] === "@" ? Bt : J }), s.removeAttribute(c);
-        } else c.startsWith(_) && (a.push({ type: 6, index: o }), s.removeAttribute(c));
+        if (s.hasAttributes()) for (const c of s.getAttributeNames()) if (c.endsWith(_t)) {
+          const v = p[n++], y = s.getAttribute(c).split(g), L = /([.?@])?(.*)/.exec(v);
+          a.push({ type: 1, index: o, name: L[2], strings: y, ctor: L[1] === "." ? Lt : L[1] === "?" ? Bt : L[1] === "@" ? Vt : J }), s.removeAttribute(c);
+        } else c.startsWith(g) && (a.push({ type: 6, index: o }), s.removeAttribute(c));
         if (bt.test(s.tagName)) {
-          const c = s.textContent.split(_), v = c.length - 1;
+          const c = s.textContent.split(g), v = c.length - 1;
           if (v > 0) {
             s.textContent = W ? W.emptyScript : "";
             for (let y = 0; y < v; y++) s.append(c[y], N()), b.nextNode(), a.push({ type: 2, index: ++o });
@@ -332,7 +332,7 @@ class H {
       } else if (s.nodeType === 8) if (s.data === mt) a.push({ type: 2, index: o });
       else {
         let c = -1;
-        for (; (c = s.data.indexOf(_, c + 1)) !== -1; ) a.push({ type: 7, index: o }), c += _.length - 1;
+        for (; (c = s.data.indexOf(g, c + 1)) !== -1; ) a.push({ type: 7, index: o }), c += g.length - 1;
       }
       o++;
     }
@@ -397,7 +397,7 @@ class z {
     return this._$AB;
   }
   _$AI(t, e = this) {
-    t = P(this, t, e), D(t) ? t === d || t == null || t === "" ? (this._$AH !== d && this._$AR(), this._$AH = d) : t !== this._$AH && t !== E && this._(t) : t._$litType$ !== void 0 ? this.$(t) : t.nodeType !== void 0 ? this.T(t) : jt(t) ? this.k(t) : this._(t);
+    t = P(this, t, e), D(t) ? t === d || t == null || t === "" ? (this._$AH !== d && this._$AR(), this._$AH = d) : t !== this._$AH && t !== E && this._(t) : t._$litType$ !== void 0 ? this.$(t) : t.nodeType !== void 0 ? this.T(t) : Rt(t) ? this.k(t) : this._(t);
   }
   O(t) {
     return this._$AA.parentNode.insertBefore(t, this._$AB);
@@ -473,7 +473,7 @@ class Lt extends J {
     this.element[this.name] = t === d ? void 0 : t;
   }
 }
-class Vt extends J {
+class Bt extends J {
   constructor() {
     super(...arguments), this.type = 4;
   }
@@ -481,7 +481,7 @@ class Vt extends J {
     this.element.toggleAttribute(this.name, !!t && t !== d);
   }
 }
-class Bt extends J {
+class Vt extends J {
   constructor(t, e, r, s, o) {
     super(t, e, r, s, o), this.type = 5;
   }
@@ -568,7 +568,7 @@ const U = (i) => (t, e) => {
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const Ft = { attribute: !0, type: String, converter: B, reflect: !1, hasChanged: et }, Jt = (i = Ft, t, e) => {
+const Ft = { attribute: !0, type: String, converter: V, reflect: !1, hasChanged: et }, Jt = (i = Ft, t, e) => {
   const { kind: r, metadata: s } = e;
   let o = globalThis.litPropertyMetadata.get(s);
   if (o === void 0 && globalThis.litPropertyMetadata.set(s, o = /* @__PURE__ */ new Map()), r === "setter" && ((i = Object.create(i)).wrapped = !0), o.set(e.name, i), r === "accessor") {
@@ -608,7 +608,7 @@ var Kt = Object.defineProperty, Zt = Object.getOwnPropertyDescriptor, it = (i, t
     (n = i[o]) && (s = (r ? n(t, e, s) : n(s)) || s);
   return r && s && Kt(t, e, s), s;
 };
-let j = class extends $ {
+let R = class extends $ {
   constructor() {
     super(...arguments), this.overallStatus = "NeverChecked", this.affectedAdvisoryCount = 0;
   }
@@ -634,7 +634,7 @@ let j = class extends $ {
     `;
   }
 };
-j.styles = O`
+R.styles = O`
     :host { display: block; }
     .status-safe { color: var(--uui-color-positive, #00a152); display: flex; align-items: center; gap: 8px; }
     .status-vulnerable { color: var(--uui-color-danger, #d0011b); display: flex; align-items: center; gap: 8px; }
@@ -643,13 +643,13 @@ j.styles = O`
   `;
 it([
   f({ type: String })
-], j.prototype, "overallStatus", 2);
+], R.prototype, "overallStatus", 2);
 it([
   f({ type: Number })
-], j.prototype, "affectedAdvisoryCount", 2);
-j = it([
+], R.prototype, "affectedAdvisoryCount", 2);
+R = it([
   U("security-dashboard-status-indicator")
-], j);
+], R);
 var Gt = Object.defineProperty, Xt = Object.getOwnPropertyDescriptor, I = (i, t, e, r) => {
   for (var s = r > 1 ? void 0 : r ? Xt(t, e) : t, o = i.length - 1, n; o >= 0; o--)
     (n = i[o]) && (s = (r ? n(t, e, s) : n(s)) || s);
@@ -744,15 +744,16 @@ let q = class extends $ {
     }
   }
   render() {
-    return this.advisory ? u`
+    var i = "";
+    return this.advisory.packages.forEach((t) => {
+      i.includes(t.packageName + " — ") ? i += `${t.affectedVersionRange}, ` : i += `${t.packageName} — ${t.affectedVersionRange}, `;
+    }), this.advisory ? u`
       <div class="advisory-row">
         <div>
           <div class="advisory-title">${this.advisory.title}</div>
-          <div class="advisory-package">
-            ${this.advisory.packageName}
-            ${this.advisory.installedVersion ? `v${this.advisory.installedVersion}` : ""}
-            — ${this.advisory.affectedVersionRange}
-          </div>
+            <div class="advisory-package">
+              ${i.slice(0, -2)}
+            </div>
         </div>
         <div class="badges">
           <uui-tag color="${this.getSeverityColor(this.advisory.severity)}">
@@ -791,6 +792,11 @@ q.styles = O`
       font-size: 0.8rem;
       color: var(--uui-color-text-alt, #666);
       margin-top: 2px;
+    }
+    .advisory-package uui-tag {
+      font-size: 0.7rem;
+      vertical-align: middle;
+      margin-left: 4px;
     }
     .badges { display: flex; gap: 6px; align-items: center; }
   `;
@@ -851,7 +857,7 @@ var se = Object.defineProperty, re = Object.getOwnPropertyDescriptor, ot = (i, t
     (n = i[o]) && (s = (r ? n(t, e, s) : n(s)) || s);
   return r && s && se(t, e, s), s;
 };
-let R = class extends $ {
+let j = class extends $ {
   constructor() {
     super(...arguments), this.lastSuccessfulCheckAt = null, this.nextScheduledCheckAt = "";
   }
@@ -889,7 +895,7 @@ let R = class extends $ {
     `;
   }
 };
-R.styles = O`
+j.styles = O`
     :host { display: block; }
     .schedule-row {
       display: flex;
@@ -903,13 +909,13 @@ R.styles = O`
   `;
 ot([
   f({ type: String })
-], R.prototype, "lastSuccessfulCheckAt", 2);
+], j.prototype, "lastSuccessfulCheckAt", 2);
 ot([
   f({ type: String })
-], R.prototype, "nextScheduledCheckAt", 2);
-R = ot([
+], j.prototype, "nextScheduledCheckAt", 2);
+j = ot([
   U("security-dashboard-check-schedule")
-], R);
+], j);
 var ie = Object.defineProperty, oe = Object.getOwnPropertyDescriptor, K = (i, t, e, r) => {
   for (var s = r > 1 ? void 0 : r ? oe(t, e) : t, o = i.length - 1, n; o >= 0; o--)
     (n = i[o]) && (s = (r ? n(t, e, s) : n(s)) || s);

@@ -24,6 +24,11 @@ export class AdvisoryItemElement extends LitElement {
       color: var(--uui-color-text-alt, #666);
       margin-top: 2px;
     }
+    .advisory-package uui-tag {
+      font-size: 0.7rem;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
     .badges { display: flex; gap: 6px; align-items: center; }
   `;
 
@@ -47,17 +52,25 @@ export class AdvisoryItemElement extends LitElement {
   }
 
   render() {
+
+    var packageInfo:string = '';
+    this.advisory.packages.forEach(pkg => {
+      if (packageInfo.includes(pkg.packageName + ' — ')) {
+        packageInfo += `${pkg.affectedVersionRange}, `;
+      } else {
+        packageInfo += `${pkg.packageName} — ${pkg.affectedVersionRange}, `;
+      }
+    });
+
     if (!this.advisory) return html``;
 
     return html`
       <div class="advisory-row">
         <div>
           <div class="advisory-title">${this.advisory.title}</div>
-          <div class="advisory-package">
-            ${this.advisory.packageName}
-            ${this.advisory.installedVersion ? `v${this.advisory.installedVersion}` : ''}
-            — ${this.advisory.affectedVersionRange}
-          </div>
+            <div class="advisory-package">
+              ${packageInfo.slice(0, -2)}
+            </div>
         </div>
         <div class="badges">
           <uui-tag color="${this.getSeverityColor(this.advisory.severity)}">

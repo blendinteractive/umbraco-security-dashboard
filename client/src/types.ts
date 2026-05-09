@@ -1,13 +1,18 @@
+export interface AdvisoryPackageDto {
+  packageName: string;
+  affectedVersionRange: string;
+  installedVersion: string | null;
+  affectedStatus: 'Affected' | 'NotAffected' | 'Unknown';
+}
+
 export interface AdvisoryDto {
   ghsaId: string;
   title: string;
   severity: 'Critical' | 'High' | 'Moderate' | 'Low';
-  packageName: string;
-  affectedVersionRange: string;
   advisoryUrl: string;
   publishedAt: string;
-  installedVersion: string | null;
   affectedStatus: 'Affected' | 'NotAffected' | 'Unknown';
+  packages: AdvisoryPackageDto[];
 }
 
 export interface DashboardStatusResponse {
