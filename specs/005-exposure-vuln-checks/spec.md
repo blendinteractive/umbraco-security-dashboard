@@ -14,6 +14,18 @@ The current binary `Affected / NotAffected / Unknown` status is replaced by this
 
 ---
 
+## Clarifications
+
+### Session 2026-05-09
+
+- Q: When during the request lifecycle should exposure checks run? → A: Compute during the advisory evaluation cycle and persist to the database.
+- Q: How should the Content Delivery API check determine whether the API is "enabled"? → A: Inspect application configuration / DI service registration only — no network call.
+- Q: How should existing `Affected` records be migrated to the new status values? → A: No migration needed — existing records have been deleted.
+- Q: What color/label should `Unknown` status use in the dashboard? → A: Grey label "Unknown" — indicates no evaluation has run yet.
+- Q: How should third-party developers register a new exposure check? → A: Via a dedicated Umbraco composition extension method (e.g., `builder.AddExposureCheck<T>()`).
+
+---
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Accurate Risk Assessment for Conditional Vulnerabilities (Priority: P1)
@@ -100,11 +112,12 @@ A developer wants to add a new exposure check for a keyword not covered in the i
 - **FR-007**: When no matching checks exist for any extracted keyword, the advisory MUST be treated as **Vulnerable**.
 - **FR-008**: When no `### Exposure` section is present in an otherwise version-matched advisory, the advisory MUST be treated as **Vulnerable**.
 - **FR-009**: The `AffectedStatus` field MUST support four values: `NotAffected`, `Mitigated`, `Vulnerable`, and `Unknown` (replacing the previous `Affected / NotAffected / Unknown` set).
-- **FR-010**: The dashboard UI MUST display **Not Affected** in green, **Mitigated** in yellow, and **Vulnerable** in red.
+- **FR-010**: The dashboard UI MUST display **Not Affected** in green, **Mitigated** in yellow, **Vulnerable** in red, and **Unknown** in grey.
 - **FR-011**: The system MUST include a built-in check for the keyword `Non-Admin Backoffice Users` that returns **Vulnerable** if any users with a role other than Administrator exist, and **Mitigated** otherwise.
 - **FR-012**: The system MUST include a built-in check for the keyword `Content Delivery API` that returns **Vulnerable** if the Content Delivery API is enabled and **Mitigated** if disabled.
-- **FR-013**: New checks MUST be registerable without modifying the core advisory-evaluation logic.
+- **FR-013**: New checks MUST be registerable without modifying the core advisory-evaluation logic. Registration is performed via a dedicated Umbraco composition extension method (e.g., `builder.AddExposureCheck<T>()`) in a composer or startup class.
 - **FR-014**: Check errors MUST be logged and treated as **Vulnerable** to preserve fail-safe posture.
+- **FR-015**: Exposure check verdicts MUST be computed during the advisory evaluation cycle and persisted to the database as the `AffectedStatus` value; they are NOT recomputed on every dashboard page load.
 
 ### Key Entities
 
@@ -131,7 +144,7 @@ A developer wants to add a new exposure check for a keyword not covered in the i
 
 - Umbraco advisories that include exposure keywords follow the `### Exposure` heading with `* *[Keyword]*` bullet format; advisories without this format are treated as Vulnerable.
 - The `Non-Admin Backoffice Users` check uses Umbraco's built-in user store to determine whether non-admin users exist; no external identity system is assumed.
-- The `Content Delivery API` check inspects the Umbraco application configuration at runtime; the definition of "enabled" is that the API is configured and its public endpoint is reachable.
-- Existing `Affected` records in stored data will be migrated or re-evaluated to `Vulnerable` to preserve the fail-safe default.
-- The extensibility mechanism is code-level (e.g., dependency injection registration); a UI for managing checks is out of scope.
+- The `Content Delivery API` check inspects the Umbraco application configuration and DI service registration at runtime; the definition of "enabled" is that the API is registered and enabled in configuration. No live HTTP probe is performed.
+- No migration of existing records is required; prior advisory data has been cleared. The system starts fresh with the new four-value `AffectedStatus` schema.
+- The extensibility mechanism is code-level via a dedicated Umbraco composition extension method (e.g., `builder.AddExposureCheck<T>()`); a UI for managing checks is out of scope.
 - Webhook payloads that include advisory status should reflect the new three-value scale.
