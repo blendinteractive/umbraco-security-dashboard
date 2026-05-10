@@ -3,10 +3,8 @@ import { customElement, state } from 'lit/decorators.js';
 import { UmbElementMixin } from '@umbraco-cms/backoffice/element-api';
 import { UMB_AUTH_CONTEXT } from '@umbraco-cms/backoffice/auth';
 import type { DashboardStatusResponse } from './types.js';
-import './components/status-indicator.element.js';
-import './components/staleness-warning.element.js';
+import './components/dashboard-header.element.js';
 import './components/advisory-list.element.js';
-import './components/check-schedule.element.js';
 
 @customElement('security-dashboard')
 export class SecurityDashboardElement extends UmbElementMixin(LitElement) {
@@ -67,7 +65,7 @@ export class SecurityDashboardElement extends UmbElementMixin(LitElement) {
     if (this._loading) {
       return html`
         <uui-box>
-          <h2>Security Dashboard</h2>
+          <h2>Security Health</h2>
           <uui-loader></uui-loader>
         </uui-box>
       `;
@@ -76,7 +74,7 @@ export class SecurityDashboardElement extends UmbElementMixin(LitElement) {
     if (this._error) {
       return html`
         <uui-box>
-          <h2>Security Dashboard</h2>
+          <h2>Security Health</h2>
           <div class="error-box">${this._error}</div>
         </uui-box>
       `;
@@ -86,25 +84,11 @@ export class SecurityDashboardElement extends UmbElementMixin(LitElement) {
 
     return html`
       <uui-box>
-        <h2>Security Dashboard</h2>
+        <h2>Security Health</h2>
 
-        <security-dashboard-status-indicator
-          .overallStatus=${s.overallStatus}
-          .affectedAdvisoryCount=${s.affectedAdvisoryCount}
-          .mitigatedAdvisoryCount=${s.mitigatedAdvisoryCount}>
-        </security-dashboard-status-indicator>
-
-        <security-dashboard-staleness-warning
-          .isStale=${s.isStale}
-          .lastSuccessfulCheckAt=${s.lastSuccessfulCheckAt}
-          .lastCheckSucceeded=${s.lastCheckSucceeded}
-          .lastCheckError=${s.lastCheckError}>
-        </security-dashboard-staleness-warning>
-
-        <security-dashboard-check-schedule
-          .lastSuccessfulCheckAt=${s.lastSuccessfulCheckAt}
-          .nextScheduledCheckAt=${s.nextScheduledCheckAt}>
-        </security-dashboard-check-schedule>
+        <security-dashboard-header
+          .status=${s}>
+        </security-dashboard-header>
 
         ${s.advisories.length > 0 ? html`
           <security-dashboard-advisory-list

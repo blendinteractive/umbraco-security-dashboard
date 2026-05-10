@@ -6,11 +6,11 @@
     {
       "type": "dashboard",
       "alias": "Umb.Dashboard.SecurityDashboard",
-      "name": "Security Dashboard",
+      "name": "Security Health",
       "element": "/App_Plugins/SecurityDashboard/dist/security-dashboard.js",
       "weight": 100,
       "meta": {
-        "label": "Security Dashboard",
+        "label": "Security Health",
         "pathname": "security-dashboard"
       },
       "conditions": [
