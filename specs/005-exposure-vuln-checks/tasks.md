@@ -72,8 +72,8 @@
 
 **Independent Test**: Enable `Umbraco:CMS:DeliveryApi:Enabled = true` in configuration and verify a matching advisory shows "Vulnerable". Set to `false` and verify "Mitigated".
 
-- [ ] T016 [P] [US2] Create `ContentDeliveryApiExposureCheck.cs` implementing `IExposureCheck` with `Keyword = "Content Delivery API"`; inject `IOptions<DeliveryApiSettings>` from `Umbraco.Cms.Core.Configuration.Models`; in `CheckAsync` return `Vulnerable` if `settings.Value.Enabled == true`, `Mitigated` otherwise (no network probe — config-only per research.md Decision 5) in `src/Umbraco.SecurityDashboard/Services/Exposure/Checks/ContentDeliveryApiExposureCheck.cs`
-- [ ] T017 [P] [US2] Write `ContentDeliveryApiExposureCheckTests.cs` covering: `Enabled = true` → `Vulnerable`; `Enabled = false` → `Mitigated` in `tests/Umbraco.SecurityDashboard.Tests/ContentDeliveryApiExposureCheckTests.cs`
+- [X] T016 [P] [US2] Create `ContentDeliveryApiExposureCheck.cs` implementing `IExposureCheck` with `Keyword = "Content Delivery API"`; inject `IOptions<DeliveryApiSettings>` from `Umbraco.Cms.Core.Configuration.Models`; in `CheckAsync` return `Vulnerable` if `settings.Value.Enabled == true`, `Mitigated` otherwise (no network probe — config-only per research.md Decision 5) in `src/Umbraco.SecurityDashboard/Services/Exposure/Checks/ContentDeliveryApiExposureCheck.cs`
+- [X] T017 [P] [US2] Write `ContentDeliveryApiExposureCheckTests.cs` covering: `Enabled = true` → `Vulnerable`; `Enabled = false` → `Mitigated` in `tests/Umbraco.SecurityDashboard.Tests/ContentDeliveryApiExposureCheckTests.cs`
 
 **Checkpoint**: User Story 2 is fully functional. Content Delivery API check correctly returns Vulnerable/Mitigated based on configuration.
 
@@ -85,8 +85,8 @@
 
 **Independent Test**: Seed an advisory with no `### Exposure` section and verify "Vulnerable". Seed one with only an unregistered keyword and verify "Vulnerable".
 
-- [ ] T018 [US3] Extend `ExposureCheckEvaluatorTests.cs` with explicit fail-safe scenarios: empty keyword list → `"Vulnerable"`; keywords list with no registered match → `"Vulnerable"`; keywords that partially match (some match, some don't) → worst-case applies in `tests/Umbraco.SecurityDashboard.Tests/ExposureCheckEvaluatorTests.cs`
-- [ ] T019 [P] [US3] Extend `VulnerabilityServiceTests.cs` with null/empty advisory description scenarios: version-matched advisory with `null` description must store `AffectedStatus = "Vulnerable"`; advisory with description but no `### Exposure` section must store `AffectedStatus = "Vulnerable"` in `tests/Umbraco.SecurityDashboard.Tests/VulnerabilityServiceTests.cs`
+- [X] T018 [US3] Extend `ExposureCheckEvaluatorTests.cs` with explicit fail-safe scenarios: empty keyword list → `"Vulnerable"`; keywords list with no registered match → `"Vulnerable"`; keywords that partially match (some match, some don't) → worst-case applies in `tests/Umbraco.SecurityDashboard.Tests/ExposureCheckEvaluatorTests.cs`
+- [X] T019 [P] [US3] Extend `VulnerabilityServiceTests.cs` with null/empty advisory description scenarios: version-matched advisory with `null` description must store `AffectedStatus = "Vulnerable"`; advisory with description but no `### Exposure` section must store `AffectedStatus = "Vulnerable"` in `tests/Umbraco.SecurityDashboard.Tests/VulnerabilityServiceTests.cs`
 
 **Checkpoint**: All fail-safe scenarios verified. No version-matched advisory can be silently dismissed.
 

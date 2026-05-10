@@ -87,4 +87,39 @@ public class ExposureCheckEvaluatorTests
         var result = await sut.EvaluateAsync(["Safe Keyword"]);
         Assert.Equal("NotAffected", result);
     }
+
+    [Fact]
+    public async Task EvaluateAsync_PartialKeywordMatch_WorstCaseOfMatchingChecksApplies()
+    {
+        // "Registered Keyword" has a check returning Mitigated.
+        // "Unregistered Keyword" has no check — it is ignored (not treated as Vulnerable).
+        // Worst-case of matching checks is Mitigated.
+        var check = Substitute.For<IExposureCheck>();
+        check.Keyword.Returns("Registered Keyword");
+        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(ExposureVerdict.Mitigated);
+        var sut = CreateSut(check);
+        var result = await sut.EvaluateAsync(["Registered Keyword", "Unregistered Keyword"]);
+        Assert.Equal("Mitigated", result);
+    }
+
+    [Fact]
+    public async Task EvaluateAsync_EmptyKeywordList_ReturnsVulnerable()
+    {
+        // Explicit fail-safe: no keywords parsed from description → default to Vulnerable.
+        var sut = CreateSut();
+        var result = await sut.EvaluateAsync([]);
+        Assert.Equal("Vulnerable", result);
+    }
+
+    [Fact]
+    public async Task EvaluateAsync_KeywordsWithNoRegisteredMatch_ReturnsVulnerable()
+    {
+        // Explicit fail-safe: keywords present but none matches any registered check → Vulnerable.
+        var check = Substitute.For<IExposureCheck>();
+        check.Keyword.Returns("Registered Check");
+        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(ExposureVerdict.Mitigated);
+        var sut = CreateSut(check);
+        var result = await sut.EvaluateAsync(["Completely Unknown Keyword"]);
+        Assert.Equal("Vulnerable", result);
+    }
 }
