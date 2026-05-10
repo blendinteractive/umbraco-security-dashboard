@@ -16,7 +16,7 @@ export interface AdvisoryDto {
 }
 
 export interface DashboardStatusResponse {
-  overallStatus: 'Safe' | 'Vulnerable' | 'NeverChecked';
+  overallStatus: 'Safe' | 'Mitigated' | 'Vulnerable' | 'NeverChecked';
   isStale: boolean;
   lastSuccessfulCheckAt: string | null;
   lastCheckAttemptAt: string | null;

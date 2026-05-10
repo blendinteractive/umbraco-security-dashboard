@@ -3,13 +3,14 @@ import { customElement, property } from 'lit/decorators.js';
 
 @customElement('security-dashboard-status-indicator')
 export class StatusIndicatorElement extends LitElement {
-  @property({ type: String }) overallStatus: 'Safe' | 'Vulnerable' | 'NeverChecked' = 'NeverChecked';
+  @property({ type: String }) overallStatus: 'Safe' | 'Mitigated' | 'Vulnerable' | 'NeverChecked' = 'NeverChecked';
   @property({ type: Number }) affectedAdvisoryCount = 0;
   @property({ type: Number }) mitigatedAdvisoryCount = 0;
 
   static styles = css`
     :host { display: block; }
     .status-safe { color: var(--uui-color-positive, #00a152); display: flex; align-items: center; gap: 8px; }
+    .status-mitigated { color: var(--uui-color-warning, #f5a623); display: flex; align-items: center; gap: 8px; }
     .status-vulnerable { color: var(--uui-color-danger, #d0011b); display: flex; align-items: center; gap: 8px; }
     .status-neutral { color: var(--uui-color-text, #333); display: flex; align-items: center; gap: 8px; }
     .status-label { font-size: 1.2rem; font-weight: 600; }
@@ -21,6 +22,18 @@ export class StatusIndicatorElement extends LitElement {
         <div class="status-safe">
           <uui-icon name="check-circle" style="font-size: 2rem;"></uui-icon>
           <span class="status-label">No Active Vulnerabilities</span>
+        </div>
+      `;
+    }
+
+    if (this.overallStatus === 'Mitigated') {
+      return html`
+        <div class="status-mitigated">
+          <uui-icon name="shield" style="font-size: 2rem;"></uui-icon>
+          <span class="status-label">
+            ${this.mitigatedAdvisoryCount}
+            ${this.mitigatedAdvisoryCount === 1 ? 'Vulnerability' : 'Vulnerabilities'} Mitigated
+          </span>
         </div>
       `;
     }

@@ -2,7 +2,7 @@ namespace Umbraco.SecurityDashboard.Models.Api;
 
 public class DashboardStatusResponse
 {
-    /// <summary>Safe | Vulnerable | NeverChecked</summary>
+    /// <summary>Safe | Mitigated | Vulnerable | NeverChecked</summary>
     public string OverallStatus { get; set; } = string.Empty;
 
     /// <summary>True when last successful check is older than 48 hours.</summary>
