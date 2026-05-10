@@ -4,8 +4,11 @@ using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Notifications;
 using Umbraco.Extensions;
 using Umbraco.SecurityDashboard.Configuration;
+using Umbraco.SecurityDashboard.Extensions;
 using Umbraco.SecurityDashboard.Scheduling;
 using Umbraco.SecurityDashboard.Services;
+using Umbraco.SecurityDashboard.Services.Exposure;
+using Umbraco.SecurityDashboard.Services.Exposure.Checks;
 
 namespace Umbraco.SecurityDashboard.Composers;
 
@@ -25,6 +28,11 @@ public class SecurityDashboardComposer : IComposer
 
         // Installed package provider
         builder.Services.AddSingleton<IInstalledPackageProvider, InstalledPackageProvider>();
+
+        // Exposure checks
+        builder.AddExposureCheck<NonAdminUsersExposureCheck>();
+        builder.AddExposureCheck<ContentDeliveryApiExposureCheck>();
+        builder.Services.AddSingleton<IExposureCheckEvaluator, ExposureCheckEvaluator>();
 
         // Vulnerability service
         builder.Services.AddSingleton<IVulnerabilityService, VulnerabilityService>();

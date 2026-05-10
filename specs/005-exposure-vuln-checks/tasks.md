@@ -98,8 +98,8 @@
 
 **Independent Test**: Register a custom check implementation against keyword `Public Registration`, seed an advisory with that keyword, and verify the check's verdict determines the advisory status.
 
-- [ ] T020 [US4] Create `UmbracoBuilderExposureExtensions.cs` with `AddExposureCheck<T>()` extension method on `IUmbracoBuilder` that registers `T` as `IExposureCheck` with singleton lifetime in the DI container in `src/Umbraco.SecurityDashboard/Extensions/UmbracoBuilderExposureExtensions.cs`
-- [ ] T021 [US4] Modify `SecurityDashboardComposer.cs` to register `NonAdminUsersExposureCheck` and `ContentDeliveryApiExposureCheck` using `builder.AddExposureCheck<T>()`, and register `ExposureCheckEvaluator` as `IExposureCheckEvaluator` singleton in `src/Umbraco.SecurityDashboard/Composers/SecurityDashboardComposer.cs`
+- [X] T020 [US4] Create `UmbracoBuilderExposureExtensions.cs` with `AddExposureCheck<T>()` extension method on `IUmbracoBuilder` that registers `T` as `IExposureCheck` with singleton lifetime in the DI container in `src/Umbraco.SecurityDashboard/Extensions/UmbracoBuilderExposureExtensions.cs`
+- [X] T021 [US4] Modify `SecurityDashboardComposer.cs` to register `NonAdminUsersExposureCheck` and `ContentDeliveryApiExposureCheck` using `builder.AddExposureCheck<T>()`, and register `ExposureCheckEvaluator` as `IExposureCheckEvaluator` singleton in `src/Umbraco.SecurityDashboard/Composers/SecurityDashboardComposer.cs`
 
 **Checkpoint**: Both built-in checks are wired into DI. A third-party developer can call `builder.AddExposureCheck<MyCheck>()` in their own `IComposer` without touching the core codebase.
 
@@ -107,7 +107,7 @@
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T022 [P] Search codebase for any remaining `"Affected"` string literals (excluding comments/tests referencing the old value by name) and replace with `"Vulnerable"` across `src/`
+- [X] T022 [P] Search codebase for any remaining `"Affected"` string literals (excluding comments/tests referencing the old value by name) and replace with `"Vulnerable"` across `src/`
 
 ---
 
