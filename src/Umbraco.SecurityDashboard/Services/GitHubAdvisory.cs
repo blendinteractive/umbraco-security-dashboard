@@ -10,6 +10,9 @@ public class GitHubAdvisory
     [JsonPropertyName("summary")]
     public string Summary { get; set; } = string.Empty;
 
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
     [JsonPropertyName("severity")]
     public string Severity { get; set; } = string.Empty;
 

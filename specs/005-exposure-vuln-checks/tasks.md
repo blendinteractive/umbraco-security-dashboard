@@ -19,7 +19,7 @@
 
 **Purpose**: Add the `Description` property to the GitHub advisory model — the single prerequisite that all exposure check work depends on.
 
-- [ ] T001 Add `[JsonPropertyName("description")] public string? Description { get; set; }` property to `GitHubAdvisory` in `src/Umbraco.SecurityDashboard/Services/GitHubAdvisory.cs`
+- [X] T001 Add `[JsonPropertyName("description")] public string? Description { get; set; }` property to `GitHubAdvisory` in `src/Umbraco.SecurityDashboard/Services/GitHubAdvisory.cs`
 
 ---
 
@@ -29,11 +29,11 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 [P] Create `IExposureCheck.cs` containing the `ExposureVerdict` enum (`NotAffected = 0`, `Mitigated = 1`, `Vulnerable = 2`) and the `IExposureCheck` interface (`string Keyword`, `Task<ExposureVerdict> CheckAsync(CancellationToken)`) in `src/Umbraco.SecurityDashboard/Services/Exposure/IExposureCheck.cs`
-- [ ] T003 [P] Create `IExposureCheckEvaluator.cs` containing the `IExposureCheckEvaluator` interface (`Task<string> EvaluateAsync(IEnumerable<string> keywords, CancellationToken)`) — contract per data-model.md — in `src/Umbraco.SecurityDashboard/Services/Exposure/IExposureCheckEvaluator.cs`
-- [ ] T004 Create `ExposureKeywordParser.cs` as a static utility with a `ParseKeywords(string? description)` method that extracts `* *[Keyword]*` bullets from the `### Exposure` section of an advisory markdown string, returning an empty collection for null/missing/malformed input (fail-safe per FR-001, FR-002) in `src/Umbraco.SecurityDashboard/Services/Exposure/ExposureKeywordParser.cs`
-- [ ] T005 Create `ExposureCheckEvaluator.cs` implementing `IExposureCheckEvaluator`: inject `IEnumerable<IExposureCheck>` (registered checks); on `EvaluateAsync`, find checks whose `Keyword` matches any item in `keywords`, run all matches concurrently, catch exceptions per check (log + treat as `Vulnerable`), return worst-case `ExposureVerdict.Max()` cast to string; return `"Vulnerable"` when no keywords or no matches (FR-004–FR-008, FR-014) in `src/Umbraco.SecurityDashboard/Services/Exposure/ExposureCheckEvaluator.cs`
-- [ ] T006 Replace all `"Affected"` string literals with `"Vulnerable"` in `VulnerabilityService.cs`: update `DetermineAffectedStatus()` return value, update `ConsolidateStatus()` precedence order (`Vulnerable > Unknown > Mitigated > NotAffected`), update `GetDashboardStatusAsync()` overallStatus logic to support `Mitigated` state (all matched advisories are Mitigated, none Vulnerable/Unknown) and to exclude `Mitigated` from `affectedAdvisoryCount` (FR-009, FR-016), update `RunCheckAsync()` webhook filter to trigger on `"Vulnerable"` instead of `"Affected"` in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`
+- [X] T002 [P] Create `IExposureCheck.cs` containing the `ExposureVerdict` enum (`NotAffected = 0`, `Mitigated = 1`, `Vulnerable = 2`) and the `IExposureCheck` interface (`string Keyword`, `Task<ExposureVerdict> CheckAsync(CancellationToken)`) in `src/Umbraco.SecurityDashboard/Services/Exposure/IExposureCheck.cs`
+- [X] T003 [P] Create `IExposureCheckEvaluator.cs` containing the `IExposureCheckEvaluator` interface (`Task<string> EvaluateAsync(IEnumerable<string> keywords, CancellationToken)`) — contract per data-model.md — in `src/Umbraco.SecurityDashboard/Services/Exposure/IExposureCheckEvaluator.cs`
+- [X] T004 Create `ExposureKeywordParser.cs` as a static utility with a `ParseKeywords(string? description)` method that extracts `* *[Keyword]*` bullets from the `### Exposure` section of an advisory markdown string, returning an empty collection for null/missing/malformed input (fail-safe per FR-001, FR-002) in `src/Umbraco.SecurityDashboard/Services/Exposure/ExposureKeywordParser.cs`
+- [X] T005 Create `ExposureCheckEvaluator.cs` implementing `IExposureCheckEvaluator`: inject `IEnumerable<IExposureCheck>` (registered checks); on `EvaluateAsync`, find checks whose `Keyword` matches any item in `keywords`, run all matches concurrently, catch exceptions per check (log + treat as `Vulnerable`), return worst-case `ExposureVerdict.Max()` cast to string; return `"Vulnerable"` when no keywords or no matches (FR-004–FR-008, FR-014) in `src/Umbraco.SecurityDashboard/Services/Exposure/ExposureCheckEvaluator.cs`
+- [X] T006 Replace all `"Affected"` string literals with `"Vulnerable"` in `VulnerabilityService.cs`: update `DetermineAffectedStatus()` return value, update `ConsolidateStatus()` precedence order (`Vulnerable > Unknown > Mitigated > NotAffected`), update `GetDashboardStatusAsync()` overallStatus logic to support `Mitigated` state (all matched advisories are Mitigated, none Vulnerable/Unknown) and to exclude `Mitigated` from `affectedAdvisoryCount` (FR-009, FR-016), update `RunCheckAsync()` webhook filter to trigger on `"Vulnerable"` instead of `"Affected"` in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
