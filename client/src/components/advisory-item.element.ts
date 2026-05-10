@@ -44,7 +44,8 @@ export class AdvisoryItemElement extends LitElement {
 
   private getStatusColor(status: string): string {
     switch (status) {
-      case 'Affected': return 'danger';
+      case 'Vulnerable': return 'danger';
+      case 'Mitigated': return 'caution';
       case 'Unknown': return 'warning';
       case 'NotAffected': return 'positive';
       default: return 'default';

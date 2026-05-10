@@ -6,7 +6,7 @@ public class AdvisoryPackageDto
     public string AffectedVersionRange { get; set; } = string.Empty;
     public string? InstalledVersion { get; set; }
 
-    /// <summary>Affected | NotAffected | Unknown</summary>
+    /// <summary>Vulnerable | Mitigated | NotAffected | Unknown</summary>
     public string AffectedStatus { get; set; } = string.Empty;
 }
 
@@ -21,7 +21,7 @@ public class AdvisoryDto
     public string AdvisoryUrl { get; set; } = string.Empty;
     public DateTime PublishedAt { get; set; }
 
-    /// <summary>Consolidated status: Affected | NotAffected | Unknown</summary>
+    /// <summary>Consolidated status: Vulnerable | Mitigated | NotAffected | Unknown</summary>
     public string AffectedStatus { get; set; } = string.Empty;
 
     public List<AdvisoryPackageDto> Packages { get; set; } = [];

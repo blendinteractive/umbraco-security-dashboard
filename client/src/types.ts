@@ -2,7 +2,7 @@ export interface AdvisoryPackageDto {
   packageName: string;
   affectedVersionRange: string;
   installedVersion: string | null;
-  affectedStatus: 'Affected' | 'NotAffected' | 'Unknown';
+  affectedStatus: 'Vulnerable' | 'Mitigated' | 'NotAffected' | 'Unknown';
 }
 
 export interface AdvisoryDto {
@@ -11,7 +11,7 @@ export interface AdvisoryDto {
   severity: 'Critical' | 'High' | 'Moderate' | 'Low';
   advisoryUrl: string;
   publishedAt: string;
-  affectedStatus: 'Affected' | 'NotAffected' | 'Unknown';
+  affectedStatus: 'Vulnerable' | 'Mitigated' | 'NotAffected' | 'Unknown';
   packages: AdvisoryPackageDto[];
 }
 
