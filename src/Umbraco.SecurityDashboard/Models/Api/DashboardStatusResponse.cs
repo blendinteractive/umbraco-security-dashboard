@@ -14,6 +14,7 @@ public class DashboardStatusResponse
     public string? LastCheckError { get; set; }
     public DateTime NextScheduledCheckAt { get; set; }
     public int AffectedAdvisoryCount { get; set; }
+    public int MitigatedAdvisoryCount { get; set; }
 
     /// <summary>
     /// Ordered for display: Affected/Unknown entries first,

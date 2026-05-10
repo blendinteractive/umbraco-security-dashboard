@@ -20,10 +20,10 @@ export class AdvisoryListElement extends LitElement {
 
   render() {
     const affectedGroup = this.advisories.filter(
-      a => a.affectedStatus === 'Affected' || a.affectedStatus === 'Unknown'
+      a => a.affectedStatus === 'Vulnerable' || a.affectedStatus === 'Mitigated'
     );
     const notAffectedGroup = this.advisories.filter(
-      a => a.affectedStatus === 'NotAffected'
+      a => a.affectedStatus === 'Unknown' || a.affectedStatus === 'NotAffected'
     );
 
     return html`

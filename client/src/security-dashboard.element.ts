@@ -90,7 +90,8 @@ export class SecurityDashboardElement extends UmbElementMixin(LitElement) {
 
         <security-dashboard-status-indicator
           .overallStatus=${s.overallStatus}
-          .affectedAdvisoryCount=${s.affectedAdvisoryCount}>
+          .affectedAdvisoryCount=${s.affectedAdvisoryCount}
+          .mitigatedAdvisoryCount=${s.mitigatedAdvisoryCount}>
         </security-dashboard-status-indicator>
 
         <security-dashboard-staleness-warning

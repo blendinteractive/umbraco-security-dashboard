@@ -36,7 +36,7 @@ export class AdvisoryItemElement extends LitElement {
     switch (severity) {
       case 'Critical': return 'danger';
       case 'High': return 'warning';
-      case 'Moderate': return 'caution';
+      case 'Moderate': return 'warning';
       case 'Low': return 'default';
       default: return 'default';
     }
@@ -45,7 +45,7 @@ export class AdvisoryItemElement extends LitElement {
   private getStatusColor(status: string): string {
     switch (status) {
       case 'Vulnerable': return 'danger';
-      case 'Mitigated': return 'caution';
+      case 'Mitigated': return 'danger';
       case 'Unknown': return 'warning';
       case 'NotAffected': return 'positive';
       default: return 'default';
@@ -70,14 +70,19 @@ export class AdvisoryItemElement extends LitElement {
         <div>
           <div class="advisory-title">${this.advisory.title}</div>
             <div class="advisory-package">
+              <uui-tag color="${this.getSeverityColor(this.advisory.severity)}">
+                ${this.advisory.severity}
+              </uui-tag>
               ${packageInfo.slice(0, -2)}
+
             </div>
         </div>
         <div class="badges">
-          <uui-tag color="${this.getSeverityColor(this.advisory.severity)}">
-            ${this.advisory.severity}
-          </uui-tag>
-          <uui-tag color="${this.getStatusColor(this.advisory.affectedStatus)}">
+
+          <uui-tag 
+            color="${this.getStatusColor(this.advisory.affectedStatus)}"
+            look="${this.advisory.affectedStatus === 'Mitigated' ? 'outline' : 'primary'}"
+            >
             ${this.advisory.affectedStatus === 'NotAffected' ? 'Not Affected' : this.advisory.affectedStatus}
           </uui-tag>
         </div>

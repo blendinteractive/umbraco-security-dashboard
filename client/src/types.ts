@@ -24,5 +24,6 @@ export interface DashboardStatusResponse {
   lastCheckError: string | null;
   nextScheduledCheckAt: string;
   affectedAdvisoryCount: number;
+  mitigatedAdvisoryCount: number;
   advisories: AdvisoryDto[];
 }

@@ -5,6 +5,7 @@ import { customElement, property } from 'lit/decorators.js';
 export class StatusIndicatorElement extends LitElement {
   @property({ type: String }) overallStatus: 'Safe' | 'Vulnerable' | 'NeverChecked' = 'NeverChecked';
   @property({ type: Number }) affectedAdvisoryCount = 0;
+  @property({ type: Number }) mitigatedAdvisoryCount = 0;
 
   static styles = css`
     :host { display: block; }
@@ -25,11 +26,14 @@ export class StatusIndicatorElement extends LitElement {
     }
 
     if (this.overallStatus === 'Vulnerable') {
+      const mitigatedSuffix = this.mitigatedAdvisoryCount > 0
+        ? ` and ${this.mitigatedAdvisoryCount} Mitigated`
+        : '';
       return html`
         <div class="status-vulnerable">
           <uui-icon name="alert" style="font-size: 2rem;"></uui-icon>
           <span class="status-label">
-            ${this.affectedAdvisoryCount} Active
+            ${this.affectedAdvisoryCount} Active${mitigatedSuffix}
             ${this.affectedAdvisoryCount === 1 ? 'Vulnerability' : 'Vulnerabilities'} Found
           </span>
         </div>
