@@ -30,7 +30,7 @@ public class InstalledPackageProvider(IHostEnvironment hostEnvironment, IOptions
 
     private void ApplyOverrides(Dictionary<string, string> packages)
     {
-        foreach (var (name, version) in settings.Value.PackageVersionOverrides)
+        foreach (var (name, version) in settings.Value.Development.PackageVersionOverrides)
             packages[name] = version;
     }
 
