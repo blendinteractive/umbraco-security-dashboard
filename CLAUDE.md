@@ -1,6 +1,6 @@
 # security-dashboard Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-09
+Auto-generated from all feature plans. Last updated: 2026-05-09
 
 ## Active Technologies
 - C# / .NET 10 (Umbraco 17) + Umbraco.Cms 17.x, Swashbuckle.AspNetCore, NuGet.Versioning, Lit 3, Vite 5, @umbraco-ui/uui, @umbraco-cms/backoffice (001-vulnerability-dashboard)
@@ -9,6 +9,8 @@ Auto-generated from all feature plans. Last updated: 2026-04-09
 - Umbraco database (SQL Server / SQLite) via NPoco + IScopeProvider (existing) (002-startup-security-check)
 - C# / .NET 10 (Umbraco 17) + NuGet.Versioning (existing — `VersionRange.MaxVersion` / `IsMaxInclusive` properties used) (003-filter-irrelevant-advisories)
 - Umbraco database via NPoco (existing — no schema change) (003-filter-irrelevant-advisories)
+- C# / .NET 10 (Umbraco 17 LTS) + Umbraco.Cms 17.x — `IUserService`, `IUserGroupService`, `IOptions<DeliveryApiSettings>`, `IScopeProvider` (all existing); no new NuGet packages (005-exposure-vuln-checks)
+- Umbraco DB (NPoco) — no schema change; `AffectedStatus` VARCHAR(20) accommodates `Vulnerable` (10), `Mitigated` (9), `NotAffected` (11), `Unknown` (7) (005-exposure-vuln-checks)
 
 
 ## Project Structure
@@ -27,9 +29,9 @@ tests/
 C# / .NET 10 (Umbraco 17 LTS): Follow standard conventions
 
 ## Recent Changes
+- 005-exposure-vuln-checks: Added C# / .NET 10 (Umbraco 17 LTS) + Umbraco.Cms 17.x — `IUserService`, `IUserGroupService`, `IOptions<DeliveryApiSettings>`, `IScopeProvider` (all existing); no new NuGet packages
 - 003-filter-irrelevant-advisories: Added C# / .NET 10 (Umbraco 17) + NuGet.Versioning (existing — `VersionRange.MaxVersion` / `IsMaxInclusive` properties used)
 - 002-startup-security-check: Added C# / .NET 10 (Umbraco 17) + Umbraco.Cms 17.x (existing) — `UmbracoApplicationStartedNotification` from `Umbraco.Cms.Core.Notifications`
-- 001-vulnerability-dashboard: Added C# / .NET 10 (Umbraco 17) + Umbraco.Cms 17.x, Swashbuckle.AspNetCore, NuGet.Versioning, Lit 3, Vite 5, @umbraco-ui/uui, @umbraco-cms/backoffice
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->
@@ -37,5 +39,5 @@ C# / .NET 10 (Umbraco 17 LTS): Follow standard conventions
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/004-webhook-notifications/plan.md
+at specs/005-exposure-vuln-checks/plan.md
 <!-- SPECKIT END -->

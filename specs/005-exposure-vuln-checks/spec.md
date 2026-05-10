@@ -10,7 +10,7 @@ Not every security advisory affects every Umbraco installation equally — a vul
 
 When an advisory is determined to affect an installed package by version range, its description is scanned for an `### Exposure` section. Keywords found there trigger registered checks. Each check inspects the running site's configuration and returns one of two verdicts: **Mitigated**, or **Vulnerable**. Advisories with no applicable checks remain **Vulnerable** by default.
 
-The current binary `Affected / NotAffected / Unknown` status is replaced by this three-value scale: **Not Affected, **Mitigated**, and **Vulnerable**
+The current binary `Affected / NotAffected / Unknown` status is replaced by this three-value scale: **Not Affected**, **Mitigated**, and **Vulnerable**
 
 ---
 
@@ -23,6 +23,11 @@ The current binary `Affected / NotAffected / Unknown` status is replaced by this
 - Q: How should existing `Affected` records be migrated to the new status values? → A: No migration needed — existing records have been deleted.
 - Q: What color/label should `Unknown` status use in the dashboard? → A: Grey label "Unknown" — indicates no evaluation has run yet.
 - Q: How should third-party developers register a new exposure check? → A: Via a dedicated Umbraco composition extension method (e.g., `builder.AddExposureCheck<T>()`).
+
+### Session 2026-05-10
+
+- Q: Can an exposure check return `NotAffected` as a verdict? → A: No. Exposure checks are only invoked when a package is already in the vulnerable version range, so `NotAffected` is not a valid verdict. A check returns **Mitigated** (conditions not present) or **Vulnerable** (conditions present).
+- Q: What should `overallStatus` be when all version-matched advisories are `Mitigated` (none `Vulnerable`)? → A: A new **`Mitigated`** overall status — distinct from `Safe` (no version matches) and `Vulnerable` (at least one unmitigated match).
 
 ---
 
@@ -85,7 +90,7 @@ A developer wants to add a new exposure check for a keyword not covered in the i
 **Acceptance Scenarios**:
 
 1. **Given** a new check registered against keyword `Public Registration`, **When** an advisory contains `* *Public Registration*` in its exposure section, **Then** the registered check is invoked and its verdict determines the advisory status.
-2. **Given** multiple checks registered, **When** an advisory exposure section contains multiple matching keywords, **Then** all matching checks run and the most severe verdict (Vulnerable > Mitigated > Not Affected) determines the final status.
+2. **Given** multiple checks registered, **When** an advisory exposure section contains multiple matching keywords, **Then** all matching checks run and the more severe verdict (Vulnerable > Mitigated) determines the final status.
 
 ---
 
@@ -93,7 +98,7 @@ A developer wants to add a new exposure check for a keyword not covered in the i
 
 - What happens when the `### Exposure` section exists but has no bullet-point keywords? Advisory is treated as Vulnerable (fail-safe).
 - What happens if a check throws an unexpected error? The check is treated as Vulnerable to maintain fail-safe posture; the error is logged.
-- What happens when multiple checks match and return differing verdicts? The most severe result wins (Vulnerable > Mitigated > Not Affected).
+- What happens when multiple checks match and return differing verdicts? The more severe result wins (Vulnerable > Mitigated).
 - What happens if the advisory description is null or empty? Advisory status defaults to Vulnerable.
 - What if a keyword matches more than one registered check? All matching checks run; the most severe verdict wins.
 
@@ -107,8 +112,8 @@ A developer wants to add a new exposure check for a keyword not covered in the i
 - **FR-002**: The system MUST extract keywords from lines matching the pattern `* *[Keyword]*` in the text following the `### Exposure` heading.
 - **FR-003**: The system MUST maintain a registry of checks, where each check is associated with one or more keywords.
 - **FR-004**: When keywords are found, the system MUST invoke all registered checks whose keywords match any extracted keyword.
-- **FR-005**: Each check MUST return one of three verdicts: **Not Affected**, **Mitigated**, or **Vulnerable**.
-- **FR-006**: When multiple checks run for a single advisory, the system MUST use the most severe verdict as the final status (Vulnerable > Mitigated > Not Affected).
+- **FR-005**: Each check MUST return one of two verdicts: **Mitigated** or **Vulnerable**. (`NotAffected` is not a valid check verdict — checks are only invoked when the package version is already in the vulnerable range.)
+- **FR-006**: When multiple checks run for a single advisory, the system MUST use the more severe verdict as the final status (Vulnerable > Mitigated).
 - **FR-007**: When no matching checks exist for any extracted keyword, the advisory MUST be treated as **Vulnerable**.
 - **FR-008**: When no `### Exposure` section is present in an otherwise version-matched advisory, the advisory MUST be treated as **Vulnerable**.
 - **FR-009**: The `AffectedStatus` field MUST support four values: `NotAffected`, `Mitigated`, `Vulnerable`, and `Unknown` (replacing the previous `Affected / NotAffected / Unknown` set).
@@ -118,6 +123,7 @@ A developer wants to add a new exposure check for a keyword not covered in the i
 - **FR-013**: New checks MUST be registerable without modifying the core advisory-evaluation logic. Registration is performed via a dedicated Umbraco composition extension method (e.g., `builder.AddExposureCheck<T>()`) in a composer or startup class.
 - **FR-014**: Check errors MUST be logged and treated as **Vulnerable** to preserve fail-safe posture.
 - **FR-015**: Exposure check verdicts MUST be computed during the advisory evaluation cycle and persisted to the database as the `AffectedStatus` value; they are NOT recomputed on every dashboard page load.
+- **FR-016**: The dashboard `overallStatus` field MUST reflect one of four values: **`Vulnerable`** (at least one advisory is `Vulnerable` or `Unknown`), **`Mitigated`** (at least one advisory is `Mitigated` and none are `Vulnerable` or `Unknown`), **`Safe`** (no advisories in the vulnerable version range, or all are `NotAffected`), or **`NeverChecked`** (no check has ever run). The `affectedAdvisoryCount` field MUST count only `Vulnerable` and `Unknown` advisories (not `Mitigated`).
 
 ### Key Entities
 
