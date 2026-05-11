@@ -20,15 +20,18 @@ public class SecurityDashboardController : ManagementApiControllerBase
     private readonly IVulnerabilityService _vulnerabilityService;
     private readonly IMitigationRepository _mitigationRepository;
     private readonly IBackOfficeSecurityAccessor _backOfficeSecurityAccessor;
+    private readonly IAuditLogRepository _auditLogRepository;
 
     public SecurityDashboardController(
         IVulnerabilityService vulnerabilityService,
         IMitigationRepository mitigationRepository,
-        IBackOfficeSecurityAccessor backOfficeSecurityAccessor)
+        IBackOfficeSecurityAccessor backOfficeSecurityAccessor,
+        IAuditLogRepository auditLogRepository)
     {
         _vulnerabilityService = vulnerabilityService;
         _mitigationRepository = mitigationRepository;
         _backOfficeSecurityAccessor = backOfficeSecurityAccessor;
+        _auditLogRepository = auditLogRepository;
     }
 
     [HttpGet("status")]
@@ -38,6 +41,30 @@ public class SecurityDashboardController : ManagementApiControllerBase
     {
         var result = await _vulnerabilityService.GetDashboardStatusAsync();
         return Ok(result);
+    }
+
+    /// <summary>Returns a reverse-chronological paginated list of security audit log entries.</summary>
+    [HttpGet("audit-log")]
+    [ProducesResponseType(typeof(AuditLogPageResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetAuditLog([FromQuery] int skip = 0, [FromQuery] int take = 25)
+    {
+        var clampedTake = Math.Min(take, 100);
+        var page = await _auditLogRepository.GetPagedAsync(skip, clampedTake);
+
+        return Ok(new AuditLogPageResponse
+        {
+            Entries = page.Entries.Select(e => new AuditLogEntryDto
+            {
+                Id = e.Id,
+                Timestamp = e.Timestamp,
+                OverallStatus = e.OverallStatus,
+                ActionType = e.ActionType,
+                ActorName = e.ActorName,
+                Description = e.Description
+            }).ToList(),
+            TotalCount = page.TotalCount
+        });
     }
 
     [HttpPost("advisories/{ghsaId}/mitigations")]

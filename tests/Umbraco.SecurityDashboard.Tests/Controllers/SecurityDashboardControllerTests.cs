@@ -15,7 +15,8 @@ public class SecurityDashboardControllerTests
         return new SecurityDashboardController(
             service ?? Substitute.For<IVulnerabilityService>(),
             Substitute.For<IMitigationRepository>(),
-            Substitute.For<IBackOfficeSecurityAccessor>());
+            Substitute.For<IBackOfficeSecurityAccessor>(),
+            Substitute.For<IAuditLogRepository>());
     }
 
     [Fact]

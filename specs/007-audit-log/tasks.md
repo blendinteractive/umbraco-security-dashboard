@@ -50,16 +50,16 @@
 
 ### Tests for User Story 1 ⚠️ Write FIRST — ensure they FAIL before implementation
 
-- [ ] T008 [P] [US1] Write unit tests for `GET /audit-log` controller endpoint: returns 200 with `AuditLogPageResponse`, maps repository results to DTOs, clamps `take` to 100, returns empty `entries` and `totalCount: 0` when log is empty; create/extend `tests/Umbraco.SecurityDashboard.Tests/Controllers/SecurityDashboardControllerAuditTests.cs`
+- [X] T008 [P] [US1] Write unit tests for `GET /audit-log` controller endpoint: returns 200 with `AuditLogPageResponse`, maps repository results to DTOs, clamps `take` to 100, returns empty `entries` and `totalCount: 0` when log is empty; create/extend `tests/Umbraco.SecurityDashboard.Tests/Controllers/SecurityDashboardControllerAuditTests.cs`
 
 ### Implementation for User Story 1
 
-- [ ] T009 [P] [US1] Create `AuditLogEntryDto` response model in `src/Umbraco.SecurityDashboard/Models/Api/AuditLogEntryDto.cs` with properties: `Id`, `Timestamp`, `OverallStatus`, `ActionType`, `ActorName`, `Description`
-- [ ] T010 [P] [US1] Create `AuditLogPageResponse` response model in `src/Umbraco.SecurityDashboard/Models/Api/AuditLogPageResponse.cs` with properties: `IReadOnlyList<AuditLogEntryDto> Entries`, `int TotalCount`
-- [ ] T011 [US1] Add `GET /audit-log` action to `src/Umbraco.SecurityDashboard/Controllers/SecurityDashboardController.cs`: inject `IAuditLogRepository`; accept `skip` (default 0) and `take` (default 25) query params; clamp `take` to 100; map `AuditLogRecord` → `AuditLogEntryDto`; return `AuditLogPageResponse`; make T008 tests pass
-- [ ] T012 [P] [US1] Add `AuditLogEntryDto` and `AuditLogPageResponse` TypeScript interface types to `client/src/types.ts` matching the API contract (`timestamp: string`, `overallStatus: 'Safe' | 'Mitigated' | 'Vulnerable' | 'NeverChecked'`, `actionType: 'Manual' | 'Automatic'`, `actorName: string | null`)
-- [ ] T013 [US1] Create `audit-log.element.ts` Lit element in `client/src/components/audit-log.element.ts`: fetches `GET /audit-log?skip=0&take=25` on connect; renders `uui-box` containing `uui-table` with columns Timestamp, Status, Type, Actor, Description; shows `uui-loader` while loading; shows empty-state paragraph when `totalCount === 0`; implements `uui-pagination` using `totalCount` and current `skip`
-- [ ] T014 [US1] Import and render `<security-audit-log>` element below the advisory list in `client/src/security-dashboard.element.ts`
+- [X] T009 [P] [US1] Create `AuditLogEntryDto` response model in `src/Umbraco.SecurityDashboard/Models/Api/AuditLogEntryDto.cs` with properties: `Id`, `Timestamp`, `OverallStatus`, `ActionType`, `ActorName`, `Description`
+- [X] T010 [P] [US1] Create `AuditLogPageResponse` response model in `src/Umbraco.SecurityDashboard/Models/Api/AuditLogPageResponse.cs` with properties: `IReadOnlyList<AuditLogEntryDto> Entries`, `int TotalCount`
+- [X] T011 [US1] Add `GET /audit-log` action to `src/Umbraco.SecurityDashboard/Controllers/SecurityDashboardController.cs`: inject `IAuditLogRepository`; accept `skip` (default 0) and `take` (default 25) query params; clamp `take` to 100; map `AuditLogRecord` → `AuditLogEntryDto`; return `AuditLogPageResponse`; make T008 tests pass
+- [X] T012 [P] [US1] Add `AuditLogEntryDto` and `AuditLogPageResponse` TypeScript interface types to `client/src/types.ts` matching the API contract (`timestamp: string`, `overallStatus: 'Safe' | 'Mitigated' | 'Vulnerable' | 'NeverChecked'`, `actionType: 'Manual' | 'Automatic'`, `actorName: string | null`)
+- [X] T013 [US1] Create `audit-log.element.ts` Lit element in `client/src/components/audit-log.element.ts`: fetches `GET /audit-log?skip=0&take=25` on connect; renders `uui-box` containing `uui-table` with columns Timestamp, Status, Type, Actor, Description; shows `uui-loader` while loading; shows empty-state paragraph when `totalCount === 0`; implements `uui-pagination` using `totalCount` and current `skip`
+- [X] T014 [US1] Import and render `<security-audit-log>` element below the advisory list in `client/src/security-dashboard.element.ts`
 
 **Checkpoint**: `GET /audit-log` returns data; Lit component shows paginated history; empty-state renders correctly.
 
