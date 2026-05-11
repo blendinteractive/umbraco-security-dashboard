@@ -96,6 +96,16 @@ public class SecurityDashboardController : ManagementApiControllerBase
             return Conflict(new ProblemDetails { Title = $"Advisory {ghsaId} is already manually mitigated." });
         }
 
+        var currentStatus = await _vulnerabilityService.GetCurrentOverallStatusAsync();
+        await _auditLogRepository.AppendAsync(new AuditLogRecord
+        {
+            Timestamp = DateTime.UtcNow,
+            OverallStatus = currentStatus,
+            ActionType = "Manual",
+            ActorName = mitigatedBy,
+            Description = $"Marked {ghsaId} as mitigated"
+        });
+
         return StatusCode(StatusCodes.Status201Created, new ManualMitigationDto
         {
             Description = record.Description,
@@ -113,6 +123,17 @@ public class SecurityDashboardController : ManagementApiControllerBase
         var deleted = await _mitigationRepository.DeleteMitigationAsync(ghsaId);
         if (!deleted)
             return NotFound(new ProblemDetails { Title = $"No manual mitigation found for advisory {ghsaId}." });
+
+        var actorName = _backOfficeSecurityAccessor.BackOfficeSecurity?.CurrentUser?.Name ?? "Unknown";
+        var currentStatus = await _vulnerabilityService.GetCurrentOverallStatusAsync();
+        await _auditLogRepository.AppendAsync(new AuditLogRecord
+        {
+            Timestamp = DateTime.UtcNow,
+            OverallStatus = currentStatus,
+            ActionType = "Manual",
+            ActorName = actorName,
+            Description = $"Removed mitigation for {ghsaId}"
+        });
 
         return NoContent();
     }
