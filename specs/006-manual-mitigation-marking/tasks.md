@@ -48,20 +48,20 @@
 
 ### Tests for User Story 1 ⚠️ Write FIRST — ensure they FAIL before implementing T012–T018
 
-- [ ] T008 [P] [US1] Add mitigation overlay unit test cases (Vulnerable→Mitigated, Unknown→Mitigated, NotAffected unaffected, overlay attribute population) in `tests/Umbraco.SecurityDashboard.Tests/Services/VulnerabilityServiceTests.cs`
-- [ ] T009 [P] [US1] Add CreateMitigation controller unit tests (201 with description, 400 empty description, 409 duplicate, 401 unauthorised) in `tests/Umbraco.SecurityDashboard.Tests/Controllers/MitigationControllerTests.cs`
+- [x] T008 [P] [US1] Add mitigation overlay unit test cases (Vulnerable→Mitigated, Unknown→Mitigated, NotAffected unaffected, overlay attribute population) in `tests/Umbraco.SecurityDashboard.Tests/Services/VulnerabilityServiceTests.cs`
+- [x] T009 [P] [US1] Add CreateMitigation controller unit tests (201 with description, 400 empty description, 409 duplicate, 401 unauthorised) in `tests/Umbraco.SecurityDashboard.Tests/Controllers/MitigationControllerTests.cs`
 
 ### Implementation for User Story 1
 
-- [ ] T010 [P] [US1] Create ManualMitigationDto (Description, MitigatedAt, MitigatedBy) in `src/Umbraco.SecurityDashboard/Models/Api/ManualMitigationDto.cs`
-- [ ] T011 [P] [US1] Create CreateMitigationRequest with `[Required][StringLength(2000, MinimumLength = 1)]` on Description in `src/Umbraco.SecurityDashboard/Models/Api/CreateMitigationRequest.cs`
-- [ ] T012 [US1] Add nullable `ManualMitigationDto? ManualMitigation` field to AdvisoryDto in `src/Umbraco.SecurityDashboard/Models/Api/AdvisoryDto.cs`
-- [ ] T013 [US1] Implement mitigation overlay in `VulnerabilityService.GetDashboardStatusAsync()`: fetch all mitigations, join by GhsaId, set AffectedStatus="Mitigated" and populate ManualMitigation, recalculate affectedCount/mitigatedCount/overallStatus in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`
-- [ ] T014 [US1] Add `[HttpPost("advisories/{ghsaId}/mitigations")]` endpoint: validate description, get current user via IBackOfficeSecurityAccessor, create record, return 201/400/409 in `src/Umbraco.SecurityDashboard/Controllers/SecurityDashboardController.cs`
-- [ ] T015 [P] [US1] Add `ManualMitigationDto` interface and `manualMitigation: ManualMitigationDto | null` to `AdvisoryDto` in `client/src/types.ts`
-- [ ] T016 [US1] Create `security-dashboard-mitigation-dialog` Lit element with `@property() mode: 'mark' | 'remove'` and `@property() ghsaId: string`; mark mode renders uui-textarea for description; remove mode renders confirmation prompt; both modes emit `mitigation-changed` on success or `mitigation-cancelled` on cancel in `client/src/components/mitigation-dialog.element.ts`
-- [ ] T017 [US1] Add "Mark As Mitigated" uui-button (visible for Vulnerable/Unknown without existing mitigation), inline mitigation attribution display (who/when/description for Mitigated advisories), and `<security-dashboard-mitigation-dialog mode="mark">` integration to `client/src/components/advisory-item.element.ts`
-- [ ] T018 [US1] Listen for bubbled `mitigation-changed` event on host element and call `_fetchStatus()` to refresh data in `client/src/components/security-dashboard.element.ts`
+- [x] T010 [P] [US1] Create ManualMitigationDto (Description, MitigatedAt, MitigatedBy) in `src/Umbraco.SecurityDashboard/Models/Api/ManualMitigationDto.cs`
+- [x] T011 [P] [US1] Create CreateMitigationRequest with `[Required][StringLength(2000, MinimumLength = 1)]` on Description in `src/Umbraco.SecurityDashboard/Models/Api/CreateMitigationRequest.cs`
+- [x] T012 [US1] Add nullable `ManualMitigationDto? ManualMitigation` field to AdvisoryDto in `src/Umbraco.SecurityDashboard/Models/Api/AdvisoryDto.cs`
+- [x] T013 [US1] Implement mitigation overlay in `VulnerabilityService.GetDashboardStatusAsync()`: fetch all mitigations, join by GhsaId, set AffectedStatus="Mitigated" and populate ManualMitigation, recalculate affectedCount/mitigatedCount/overallStatus in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`
+- [x] T014 [US1] Add `[HttpPost("advisories/{ghsaId}/mitigations")]` endpoint: validate description, get current user via IBackOfficeSecurityAccessor, create record, return 201/400/409 in `src/Umbraco.SecurityDashboard/Controllers/SecurityDashboardController.cs`
+- [x] T015 [P] [US1] Add `ManualMitigationDto` interface and `manualMitigation: ManualMitigationDto | null` to `AdvisoryDto` in `client/src/types.ts`
+- [x] T016 [US1] Create `security-dashboard-mitigation-dialog` Lit element with `@property() mode: 'mark' | 'remove'` and `@property() ghsaId: string`; mark mode renders uui-textarea for description; remove mode renders confirmation prompt; both modes emit `mitigation-changed` on success or `mitigation-cancelled` on cancel in `client/src/components/mitigation-dialog.element.ts`
+- [x] T017 [US1] Add "Mark As Mitigated" uui-button (visible for Vulnerable/Unknown without existing mitigation), inline mitigation attribution display (who/when/description for Mitigated advisories), and `<security-dashboard-mitigation-dialog mode="mark">` integration to `client/src/components/advisory-item.element.ts`
+- [x] T018 [US1] Listen for bubbled `mitigation-changed` event on host element and call `_fetchStatus()` to refresh data in `client/src/components/security-dashboard.element.ts`
 
 **Checkpoint**: User Story 1 is fully functional — mark an advisory, see it show Mitigated with attribution.
 

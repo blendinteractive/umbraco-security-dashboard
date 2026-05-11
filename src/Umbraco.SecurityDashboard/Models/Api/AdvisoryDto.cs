@@ -25,4 +25,6 @@ public class AdvisoryDto
     public string AffectedStatus { get; set; } = string.Empty;
 
     public List<AdvisoryPackageDto> Packages { get; set; } = [];
+
+    public ManualMitigationDto? ManualMitigation { get; set; }
 }

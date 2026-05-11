@@ -64,13 +64,13 @@ public class MitigationRepositoryTests
     }
 
     [Fact]
-    public async Task CreateMitigationAsync_WhenUniqueConstraintViolated_Throws()
+    public async Task CreateMitigationAsync_WhenUniqueConstraintViolated_ThrowsDuplicateMitigationException()
     {
         var (repo, scope) = CreateSut();
         var record = new ManualMitigationRecord { GhsaId = "GHSA-already-exists" };
         scope.Database.Insert(record).Throws(new Exception("UNIQUE constraint failed"));
 
-        await Assert.ThrowsAsync<Exception>(() => repo.CreateMitigationAsync(record));
+        await Assert.ThrowsAsync<DuplicateMitigationException>(() => repo.CreateMitigationAsync(record));
     }
 
     [Fact]

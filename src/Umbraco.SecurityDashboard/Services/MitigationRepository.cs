@@ -24,10 +24,22 @@ public class MitigationRepository : IMitigationRepository
     public Task CreateMitigationAsync(ManualMitigationRecord record)
     {
         using var scope = _scopeProvider.CreateScope();
-        scope.Database.Insert(record);
+        try
+        {
+            scope.Database.Insert(record);
+        }
+        catch (Exception ex) when (IsUniqueConstraintViolation(ex))
+        {
+            throw new DuplicateMitigationException(record.GhsaId);
+        }
         scope.Complete();
         return Task.CompletedTask;
     }
+
+    private static bool IsUniqueConstraintViolation(Exception ex) =>
+        ex.Message.Contains("UNIQUE", StringComparison.OrdinalIgnoreCase) ||
+        ex.Message.Contains("duplicate key", StringComparison.OrdinalIgnoreCase) ||
+        ex.Message.Contains("unique constraint", StringComparison.OrdinalIgnoreCase);
 
     public Task<bool> DeleteMitigationAsync(string ghsaId)
     {
