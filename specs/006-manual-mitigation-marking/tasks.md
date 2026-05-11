@@ -19,9 +19,9 @@
 
 **Purpose**: Create the database model and migration that all other work depends on.
 
-- [ ] T001 Create ManualMitigationRecord NPoco POCO in `src/Umbraco.SecurityDashboard/Models/Db/ManualMitigationRecord.cs`
-- [ ] T002 Create AddManualMitigationTable migration (Id, GhsaId UNIQUE, Description, MitigatedAt, MitigatedBy) in `src/Umbraco.SecurityDashboard/Migrations/AddManualMitigationTable.cs`
-- [ ] T003 Register migration step `From("SecurityDashboard-1.0.0").To<AddManualMitigationTable>("SecurityDashboard-1.1.0")` in `src/Umbraco.SecurityDashboard/Migrations/SecurityDashboardMigrationPlan.cs`
+- [x] T001 Create ManualMitigationRecord NPoco POCO in `src/Umbraco.SecurityDashboard/Models/Db/ManualMitigationRecord.cs`
+- [x] T002 Create AddManualMitigationTable migration (Id, GhsaId UNIQUE, Description, MitigatedAt, MitigatedBy) in `src/Umbraco.SecurityDashboard/Migrations/AddManualMitigationTable.cs`
+- [x] T003 Register migration step `From("SecurityDashboard-1.0.0").To<AddManualMitigationTable>("SecurityDashboard-1.1.0")` in `src/Umbraco.SecurityDashboard/Migrations/SecurityDashboardMigrationPlan.cs`
 
 ---
 
@@ -31,10 +31,10 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T004 [P] Create IMitigationRepository interface (GetAllMitigationsAsync, CreateMitigationAsync, DeleteMitigationAsync) in `src/Umbraco.SecurityDashboard/Services/IMitigationRepository.cs`
-- [ ] T005 [P] Add integration tests for all three IMitigationRepository methods (real DB, IScopeProvider) in `tests/Umbraco.SecurityDashboard.Tests/Services/MitigationRepositoryTests.cs`
-- [ ] T006 Implement MitigationRepository using NPoco + IScopeProvider; CreateMitigationAsync throws on UNIQUE violation (409 path); DeleteMitigationAsync returns bool in `src/Umbraco.SecurityDashboard/Services/MitigationRepository.cs`
-- [ ] T007 Register `IMitigationRepository → MitigationRepository` as `AddScoped` in `src/Umbraco.SecurityDashboard/Composers/SecurityDashboardComposer.cs`
+- [x] T004 [P] Create IMitigationRepository interface (GetAllMitigationsAsync, CreateMitigationAsync, DeleteMitigationAsync) in `src/Umbraco.SecurityDashboard/Services/IMitigationRepository.cs`
+- [x] T005 [P] Add integration tests for all three IMitigationRepository methods (real DB, IScopeProvider) in `tests/Umbraco.SecurityDashboard.Tests/Services/MitigationRepositoryTests.cs`
+- [x] T006 Implement MitigationRepository using NPoco + IScopeProvider; CreateMitigationAsync throws on UNIQUE violation (409 path); DeleteMitigationAsync returns bool in `src/Umbraco.SecurityDashboard/Services/MitigationRepository.cs`
+- [x] T007 Register `IMitigationRepository → MitigationRepository` as `AddScoped` in `src/Umbraco.SecurityDashboard/Composers/SecurityDashboardComposer.cs`
 
 **Checkpoint**: Foundation ready — both user stories can now be implemented independently.
 

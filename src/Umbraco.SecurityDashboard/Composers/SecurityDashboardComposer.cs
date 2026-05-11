@@ -22,6 +22,7 @@ public class SecurityDashboardComposer : IComposer
 
         // Data access
         builder.Services.AddSingleton<IVulnerabilityCheckRepository, VulnerabilityCheckRepository>();
+        builder.Services.AddScoped<IMitigationRepository, MitigationRepository>();
 
         // GitHub advisory client
         builder.Services.AddSingleton<IGitHubAdvisoryClient, GitHubAdvisoryClient>();
