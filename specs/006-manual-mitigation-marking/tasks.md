@@ -90,8 +90,8 @@
 
 **Purpose**: Validation of the complete flow against quickstart.md acceptance tests and cross-cutting hardening.
 
-- [ ] T022 Validate all five quickstart.md acceptance tests manually: (1) mark Vulnerable advisory → Mitigated with attribution; (2) empty description blocked; (3) mark then remove → reverts to Vulnerable; (4) two admins can both remove any mitigation; (5) mark an advisory, restart + rescan, confirm mitigation persists
-- [ ] T023 [P] Verify 409 Conflict response when attempting to mark an already-mitigated advisory via the POST endpoint (covers spec clarification: button not shown, but API also rejects)
+- [x] T022 Validate all five quickstart.md acceptance tests manually: (1) mark Vulnerable advisory → Mitigated with attribution; (2) empty description blocked; (3) mark then remove → reverts to Vulnerable; (4) two admins can both remove any mitigation; (5) mark an advisory, restart + rescan, confirm mitigation persists
+- [x] T023 [P] Verify 409 Conflict response when attempting to mark an already-mitigated advisory via the POST endpoint (covers spec clarification: button not shown, but API also rejects)
 
 ---
 
