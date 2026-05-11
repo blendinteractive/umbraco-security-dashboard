@@ -5,6 +5,12 @@ export interface AdvisoryPackageDto {
   affectedStatus: 'Vulnerable' | 'Mitigated' | 'NotAffected' | 'Unknown';
 }
 
+export interface ManualMitigationDto {
+  description: string;
+  mitigatedAt: string;
+  mitigatedBy: string;
+}
+
 export interface AdvisoryDto {
   ghsaId: string;
   title: string;
@@ -13,6 +19,7 @@ export interface AdvisoryDto {
   publishedAt: string;
   affectedStatus: 'Vulnerable' | 'Mitigated' | 'NotAffected' | 'Unknown';
   packages: AdvisoryPackageDto[];
+  manualMitigation: ManualMitigationDto | null;
 }
 
 export interface DashboardStatusResponse {

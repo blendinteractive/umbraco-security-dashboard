@@ -20,7 +20,7 @@ export class StatusIndicatorElement extends LitElement {
     if (this.overallStatus === 'Safe') {
       return html`
         <div class="status-safe">
-          <uui-icon name="check-circle" style="font-size: 2rem;"></uui-icon>
+          <uui-icon name="check" style="font-size: 2rem;"></uui-icon>
           <span class="status-label">No Active Vulnerabilities</span>
         </div>
       `;
@@ -29,7 +29,7 @@ export class StatusIndicatorElement extends LitElement {
     if (this.overallStatus === 'Mitigated') {
       return html`
         <div class="status-mitigated">
-          <uui-icon name="shield" style="font-size: 2rem;"></uui-icon>
+          <uui-icon name="check" style="font-size: 2rem;"></uui-icon>
           <span class="status-label">
             ${this.mitigatedAdvisoryCount}
             ${this.mitigatedAdvisoryCount === 1 ? 'Vulnerability' : 'Vulnerabilities'} Mitigated

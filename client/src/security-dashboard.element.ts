@@ -27,13 +27,27 @@ export class SecurityDashboardElement extends UmbElementMixin(LitElement) {
   connectedCallback() {
     super.connectedCallback();
     this._fetchStatus();
+    this.addEventListener('mitigation-changed', this._onMitigationChanged);
   }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('mitigation-changed', this._onMitigationChanged);
+  }
+
+  private _onMitigationChanged = () => {
+    this._fetchStatus();
+  };
 
   private async _fetchStatus() {
     this._loading = true;
     this._error = null;
     try {
       const authContext = await this.getContext(UMB_AUTH_CONTEXT);
+      if (!authContext) {
+        this._error = 'Authentication context not available.';
+        return;
+      }
       const token = await authContext.getLatestToken();
 
       const response = await fetch('/umbraco/management/api/v1/security-dashboard/status', {
