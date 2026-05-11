@@ -1,5 +1,7 @@
 {
   "enabledPlugins": {
-    "umbraco-cms-backoffice-skills@umbraco-backoffice-marketplace": true
+    "umbraco-cms-backoffice-skills@umbraco-backoffice-marketplace": true,
+    "dotnet-diag@dotnet-agent-skills": true,
+    "dotnet-msbuild@dotnet-agent-skills": true
   }
 }
