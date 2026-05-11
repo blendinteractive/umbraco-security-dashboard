@@ -125,9 +125,9 @@
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T025 [P] Verify `take` clamping: add or confirm a test in `tests/Umbraco.SecurityDashboard.Tests/Controllers/SecurityDashboardControllerAuditTests.cs` that `take=200` is silently reduced to 100 before calling the repository
-- [ ] T026 [P] Add Swashbuckle XML doc comment to the `GET /audit-log` action in `src/Umbraco.SecurityDashboard/Controllers/SecurityDashboardController.cs` so it appears correctly in the OpenAPI output (matching the existing doc comment style on other endpoints)
-- [ ] T027 Run `dotnet test tests/Umbraco.SecurityDashboard.Tests/` and fix any regressions introduced by the VulnerabilityService and controller modifications
+- [X] T025 [P] Verify `take` clamping: add or confirm a test in `tests/Umbraco.SecurityDashboard.Tests/Controllers/SecurityDashboardControllerAuditTests.cs` that `take=200` is silently reduced to 100 before calling the repository
+- [X] T026 [P] Add Swashbuckle XML doc comment to the `GET /audit-log` action in `src/Umbraco.SecurityDashboard/Controllers/SecurityDashboardController.cs` so it appears correctly in the OpenAPI output (matching the existing doc comment style on other endpoints)
+- [X] T027 Run `dotnet test tests/Umbraco.SecurityDashboard.Tests/` and fix any regressions introduced by the VulnerabilityService and controller modifications
 
 ---
 
