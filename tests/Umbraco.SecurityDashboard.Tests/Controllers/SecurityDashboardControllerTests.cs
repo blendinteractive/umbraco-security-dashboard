@@ -16,7 +16,8 @@ public class SecurityDashboardControllerTests
             service ?? Substitute.For<IVulnerabilityService>(),
             Substitute.For<IMitigationRepository>(),
             Substitute.For<IBackOfficeSecurityAccessor>(),
-            Substitute.For<IAuditLogRepository>());
+            Substitute.For<IAuditLogRepository>(),
+            Substitute.For<IWebhookNotifier>());
     }
 
     [Fact]

@@ -25,7 +25,7 @@ public class MitigationControllerTests
         backOfficeSecurity.CurrentUser.Returns(user);
         backOfficeAccessor.BackOfficeSecurity.Returns(backOfficeSecurity);
 
-        var controller = new SecurityDashboardController(vulnerabilityService, mitigationRepo, backOfficeAccessor, Substitute.For<IAuditLogRepository>());
+        var controller = new SecurityDashboardController(vulnerabilityService, mitigationRepo, backOfficeAccessor, Substitute.For<IAuditLogRepository>(), Substitute.For<IWebhookNotifier>());
         return (controller, mitigationRepo);
     }
 
@@ -81,7 +81,7 @@ public class MitigationControllerTests
         var backOfficeAccessor = Substitute.For<IBackOfficeSecurityAccessor>();
         backOfficeAccessor.BackOfficeSecurity.Returns((IBackOfficeSecurity?)null);
 
-        var controller = new SecurityDashboardController(vulnerabilityService, mitigationRepo, backOfficeAccessor, Substitute.For<IAuditLogRepository>());
+        var controller = new SecurityDashboardController(vulnerabilityService, mitigationRepo, backOfficeAccessor, Substitute.For<IAuditLogRepository>(), Substitute.For<IWebhookNotifier>());
 
         await controller.CreateMitigation("GHSA-test", new CreateMitigationRequest { Description = "Fix" });
 

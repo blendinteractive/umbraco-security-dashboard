@@ -16,13 +16,15 @@ public class SecurityDashboardControllerAuditTests
         IAuditLogRepository? auditRepo = null,
         IVulnerabilityService? vulnerabilityService = null,
         IMitigationRepository? mitigationRepo = null,
-        IBackOfficeSecurityAccessor? backOfficeSecurityAccessor = null)
+        IBackOfficeSecurityAccessor? backOfficeSecurityAccessor = null,
+        IWebhookNotifier? webhookNotifier = null)
     {
         return new SecurityDashboardController(
             vulnerabilityService ?? Substitute.For<IVulnerabilityService>(),
             mitigationRepo ?? Substitute.For<IMitigationRepository>(),
             backOfficeSecurityAccessor ?? Substitute.For<IBackOfficeSecurityAccessor>(),
-            auditRepo ?? Substitute.For<IAuditLogRepository>());
+            auditRepo ?? Substitute.For<IAuditLogRepository>(),
+            webhookNotifier ?? Substitute.For<IWebhookNotifier>());
     }
 
     private static IBackOfficeSecurityAccessor CreateBackOfficeAccessor(string userName)
@@ -220,5 +222,79 @@ public class SecurityDashboardControllerAuditTests
         await controller.DeleteMitigation("GHSA-abcd");
 
         await auditRepo.Received(1).AppendAsync(Arg.Is<AuditLogRecord>(r => r.ActorName == "Alice Security"));
+    }
+
+    // T022 — US4: conditional webhook firing from controller
+
+    [Fact]
+    public async Task CreateMitigation_WhenStatusChanges_FiresWebhook()
+    {
+        var auditRepo = Substitute.For<IAuditLogRepository>();
+        var mitigationRepo = Substitute.For<IMitigationRepository>();
+        var vulnService = Substitute.For<IVulnerabilityService>();
+        // Before mitigation: Vulnerable → after mitigation: Mitigated
+        vulnService.GetCurrentOverallStatusAsync().Returns("Vulnerable", "Mitigated");
+        var webhookNotifier = Substitute.For<IWebhookNotifier>();
+        var backOfficeAccessor = CreateBackOfficeAccessor("Jane Admin");
+
+        var controller = CreateSut(auditRepo, vulnService, mitigationRepo, backOfficeAccessor, webhookNotifier);
+        await controller.CreateMitigation("GHSA-1234-5678-abcd", new CreateMitigationRequest { Description = "Fixed" });
+
+        await webhookNotifier.Received(1).NotifyAsync(
+            Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<IReadOnlyList<AdvisoryRecord>>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task CreateMitigation_WhenStatusUnchanged_DoesNotFireWebhook()
+    {
+        var auditRepo = Substitute.For<IAuditLogRepository>();
+        var mitigationRepo = Substitute.For<IMitigationRepository>();
+        var vulnService = Substitute.For<IVulnerabilityService>();
+        vulnService.GetCurrentOverallStatusAsync().Returns("Mitigated");
+        var webhookNotifier = Substitute.For<IWebhookNotifier>();
+        var backOfficeAccessor = CreateBackOfficeAccessor("Jane Admin");
+
+        var controller = CreateSut(auditRepo, vulnService, mitigationRepo, backOfficeAccessor, webhookNotifier);
+        await controller.CreateMitigation("GHSA-1234-5678-abcd", new CreateMitigationRequest { Description = "Fixed" });
+
+        await webhookNotifier.DidNotReceive().NotifyAsync(
+            Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<IReadOnlyList<AdvisoryRecord>>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task DeleteMitigation_WhenStatusChanges_FiresWebhook()
+    {
+        var auditRepo = Substitute.For<IAuditLogRepository>();
+        var mitigationRepo = Substitute.For<IMitigationRepository>();
+        mitigationRepo.DeleteMitigationAsync("GHSA-1234-5678-abcd").Returns(true);
+        var vulnService = Substitute.For<IVulnerabilityService>();
+        // Before delete: Mitigated → after delete: Vulnerable
+        vulnService.GetCurrentOverallStatusAsync().Returns("Mitigated", "Vulnerable");
+        var webhookNotifier = Substitute.For<IWebhookNotifier>();
+        var backOfficeAccessor = CreateBackOfficeAccessor("Bob Admin");
+
+        var controller = CreateSut(auditRepo, vulnService, mitigationRepo, backOfficeAccessor, webhookNotifier);
+        await controller.DeleteMitigation("GHSA-1234-5678-abcd");
+
+        await webhookNotifier.Received(1).NotifyAsync(
+            Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<IReadOnlyList<AdvisoryRecord>>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task DeleteMitigation_WhenStatusUnchanged_DoesNotFireWebhook()
+    {
+        var auditRepo = Substitute.For<IAuditLogRepository>();
+        var mitigationRepo = Substitute.For<IMitigationRepository>();
+        mitigationRepo.DeleteMitigationAsync("GHSA-1234-5678-abcd").Returns(true);
+        var vulnService = Substitute.For<IVulnerabilityService>();
+        vulnService.GetCurrentOverallStatusAsync().Returns("Safe");
+        var webhookNotifier = Substitute.For<IWebhookNotifier>();
+        var backOfficeAccessor = CreateBackOfficeAccessor("Bob Admin");
+
+        var controller = CreateSut(auditRepo, vulnService, mitigationRepo, backOfficeAccessor, webhookNotifier);
+        await controller.DeleteMitigation("GHSA-1234-5678-abcd");
+
+        await webhookNotifier.DidNotReceive().NotifyAsync(
+            Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<IReadOnlyList<AdvisoryRecord>>(), Arg.Any<CancellationToken>());
     }
 }

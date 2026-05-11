@@ -112,12 +112,12 @@
 
 ### Tests for User Story 4 ⚠️ Write FIRST — ensure they FAIL before implementation
 
-- [ ] T022 [P] [US4] Write unit tests for conditional webhook firing: `RunCheckAsync()` with state change calls `IWebhookNotifier.NotifyAsync`; `RunCheckAsync()` with no state change does NOT call notifier; POST/DELETE mitigation that changes overall state calls notifier; POST/DELETE mitigation that does not change state does NOT call notifier; extend `tests/Umbraco.SecurityDashboard.Tests/Services/VulnerabilityServiceAuditTests.cs` and `tests/Umbraco.SecurityDashboard.Tests/Controllers/SecurityDashboardControllerAuditTests.cs`
+- [X] T022 [P] [US4] Write unit tests for conditional webhook firing: `RunCheckAsync()` with state change calls `IWebhookNotifier.NotifyAsync`; `RunCheckAsync()` with no state change does NOT call notifier; POST/DELETE mitigation that changes overall state calls notifier; POST/DELETE mitigation that does not change state does NOT call notifier; extend `tests/Umbraco.SecurityDashboard.Tests/Services/VulnerabilityServiceAuditTests.cs` and `tests/Umbraco.SecurityDashboard.Tests/Controllers/SecurityDashboardControllerAuditTests.cs`
 
 ### Implementation for User Story 4
 
-- [ ] T023 [US4] Modify `VulnerabilityService.RunCheckAsync()` in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`: move the existing unconditional `IWebhookNotifier.NotifyAsync()` call inside the `previousStatus != newStatus` branch so it fires only on actual state changes; pass empty advisories list; make T022 tests pass
-- [ ] T024 [US4] Inject `IWebhookNotifier` into `SecurityDashboardController` in `src/Umbraco.SecurityDashboard/Controllers/SecurityDashboardController.cs`: after writing the audit entry in POST and DELETE mitigation actions, compare `overallStatus` before the action (captured before save) to `overallStatus` after (captured via `GetCurrentOverallStatusAsync()`); if they differ, call `IWebhookNotifier.NotifyAsync()` with an empty advisories list; make T022 tests pass
+- [X] T023 [US4] Modify `VulnerabilityService.RunCheckAsync()` in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`: move the existing unconditional `IWebhookNotifier.NotifyAsync()` call inside the `previousStatus != newStatus` branch so it fires only on actual state changes; pass empty advisories list; make T022 tests pass
+- [X] T024 [US4] Inject `IWebhookNotifier` into `SecurityDashboardController` in `src/Umbraco.SecurityDashboard/Controllers/SecurityDashboardController.cs`: after writing the audit entry in POST and DELETE mitigation actions, compare `overallStatus` before the action (captured before save) to `overallStatus` after (captured via `GetCurrentOverallStatusAsync()`); if they differ, call `IWebhookNotifier.NotifyAsync()` with an empty advisories list; make T022 tests pass
 
 **Checkpoint**: Webhook fires for 100% of state changes and 0% of non-state-changing actions.
 

@@ -21,17 +21,20 @@ public class SecurityDashboardController : ManagementApiControllerBase
     private readonly IMitigationRepository _mitigationRepository;
     private readonly IBackOfficeSecurityAccessor _backOfficeSecurityAccessor;
     private readonly IAuditLogRepository _auditLogRepository;
+    private readonly IWebhookNotifier _webhookNotifier;
 
     public SecurityDashboardController(
         IVulnerabilityService vulnerabilityService,
         IMitigationRepository mitigationRepository,
         IBackOfficeSecurityAccessor backOfficeSecurityAccessor,
-        IAuditLogRepository auditLogRepository)
+        IAuditLogRepository auditLogRepository,
+        IWebhookNotifier webhookNotifier)
     {
         _vulnerabilityService = vulnerabilityService;
         _mitigationRepository = mitigationRepository;
         _backOfficeSecurityAccessor = backOfficeSecurityAccessor;
         _auditLogRepository = auditLogRepository;
+        _webhookNotifier = webhookNotifier;
     }
 
     [HttpGet("status")]
@@ -78,6 +81,7 @@ public class SecurityDashboardController : ManagementApiControllerBase
             return BadRequest(ModelState);
 
         var mitigatedBy = _backOfficeSecurityAccessor.BackOfficeSecurity?.CurrentUser?.Name ?? "Unknown";
+        var previousStatus = await _vulnerabilityService.GetCurrentOverallStatusAsync();
 
         var record = new ManualMitigationRecord
         {
@@ -106,6 +110,9 @@ public class SecurityDashboardController : ManagementApiControllerBase
             Description = $"Marked {ghsaId} as mitigated"
         });
 
+        if (previousStatus != currentStatus)
+            await _webhookNotifier.NotifyAsync(currentStatus, DateTime.UtcNow, []);
+
         return StatusCode(StatusCodes.Status201Created, new ManualMitigationDto
         {
             Description = record.Description,
@@ -120,11 +127,13 @@ public class SecurityDashboardController : ManagementApiControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> DeleteMitigation(string ghsaId)
     {
+        var actorName = _backOfficeSecurityAccessor.BackOfficeSecurity?.CurrentUser?.Name ?? "Unknown";
+        var previousStatus = await _vulnerabilityService.GetCurrentOverallStatusAsync();
+
         var deleted = await _mitigationRepository.DeleteMitigationAsync(ghsaId);
         if (!deleted)
             return NotFound(new ProblemDetails { Title = $"No manual mitigation found for advisory {ghsaId}." });
 
-        var actorName = _backOfficeSecurityAccessor.BackOfficeSecurity?.CurrentUser?.Name ?? "Unknown";
         var currentStatus = await _vulnerabilityService.GetCurrentOverallStatusAsync();
         await _auditLogRepository.AppendAsync(new AuditLogRecord
         {
@@ -134,6 +143,9 @@ public class SecurityDashboardController : ManagementApiControllerBase
             ActorName = actorName,
             Description = $"Removed mitigation for {ghsaId}"
         });
+
+        if (previousStatus != currentStatus)
+            await _webhookNotifier.NotifyAsync(currentStatus, DateTime.UtcNow, []);
 
         return NoContent();
     }
