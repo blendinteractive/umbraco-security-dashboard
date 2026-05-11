@@ -48,7 +48,7 @@ When configured, the dashboard posts the scan result to an external endpoint aft
 
 | Property | Description |
 |---|---|
-| `SiteUrl` | The public URL of this Umbraco instance. Included in the webhook payload to identify the source. |
+| `SiteUrl` | The public URL of this Umbraco instance. Included in the webhook payload to identify the source. This is simply an identifying string since the web context isn't available in the scheduled check. |
 | `EndpointUrl` | The URL to POST the result to. Leave empty to disable webhook notifications. |
 | `Secret` | Shared secret included in the request header for payload verification. |
 | `TimeoutSeconds` | HTTP timeout for the webhook request. Defaults to `10`. |
@@ -80,7 +80,54 @@ The `Development` subsection contains settings that are only applied when the ap
 
 ### Extending ExposureChecks
 
+Exposure checks determine whether your instance is actually susceptible to a given advisory. The package ships with two built-in checks, but you can add your own.
 
+**1. Implement `IExposureCheck`:**
+
+```csharp
+using Umbraco.SecurityDashboard.Services.Exposure;
+
+public class PublicRegistrationExposureCheck : IExposureCheck
+{
+    // Must match a keyword that appears in advisory descriptions.
+    // The evaluator only runs this check when the keyword is found.
+    public string Keyword => "Member Registration";
+
+    public Task<ExposureVerdict> CheckAsync(CancellationToken cancellationToken = default)
+    {
+        // Return Vulnerable, Mitigated, or NotAffected
+        bool registrationOpen = /* your logic here */ true;
+        var verdict = registrationOpen ? ExposureVerdict.Vulnerable : ExposureVerdict.Mitigated;
+        return Task.FromResult(verdict);
+    }
+}
+```
+
+**2. Register it in your composer or `Program.cs`:**
+
+```csharp
+builder.AddExposureCheck<PublicRegistrationExposureCheck>();
+```
+
+The check runs only when the `Keyword` appears in the advisory text, so it doesn't add overhead for unrelated advisories. If the check throws, the evaluator logs the exception and treats the result as `Vulnerable`.
+
+**Built-in checks:**
+
+| Keyword | What it checks |
+|---|---|
+| `Content Delivery API` | Whether the Umbraco Delivery API is enabled |
+| `Non-Admin Backoffice Users` | Whether any non-admin backoffice users exist |
 
 ### Spec-Kit
 
+This project uses [Spec-Kit](https://github.com/your-org/spec-kit) for structured feature development. Feature specifications live in `specs/` and drive the implementation workflow.
+
+```bash
+# Review the current feature plan
+cat specs/007-audit-log/plan.md
+
+# Run the implementation agent against the active plan
+/speckit-implement
+```
+
+Each spec directory contains a `plan.md` with the feature design and a `tasks.md` with the implementation checklist. Completed specs are kept for reference.
