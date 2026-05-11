@@ -22,6 +22,20 @@ export interface AdvisoryDto {
   manualMitigation: ManualMitigationDto | null;
 }
 
+export interface AuditLogEntryDto {
+  id: number;
+  timestamp: string;
+  overallStatus: 'Safe' | 'Mitigated' | 'Vulnerable' | 'NeverChecked';
+  actionType: 'Manual' | 'Automatic';
+  actorName: string | null;
+  description: string;
+}
+
+export interface AuditLogPageResponse {
+  entries: AuditLogEntryDto[];
+  totalCount: number;
+}
+
 export interface DashboardStatusResponse {
   overallStatus: 'Safe' | 'Mitigated' | 'Vulnerable' | 'NeverChecked';
   isStale: boolean;

@@ -5,6 +5,7 @@ import { UMB_AUTH_CONTEXT } from '@umbraco-cms/backoffice/auth';
 import type { DashboardStatusResponse } from './types.js';
 import './components/dashboard-header.element.js';
 import './components/advisory-list.element.js';
+import './components/audit-log.element.js';
 
 @customElement('security-dashboard')
 export class SecurityDashboardElement extends UmbElementMixin(LitElement) {
@@ -110,6 +111,8 @@ export class SecurityDashboardElement extends UmbElementMixin(LitElement) {
           </security-dashboard-advisory-list>
         ` : ''}
       </uui-box>
+
+      <security-audit-log></security-audit-log>
     `;
   }
 }
