@@ -111,7 +111,7 @@ public class SecurityDashboardController : ManagementApiControllerBase
         });
 
         if (previousStatus != currentStatus)
-            await _webhookNotifier.NotifyAsync(currentStatus, DateTime.UtcNow, []);
+            await _webhookNotifier.NotifyAsync(currentStatus, DateTime.UtcNow, [], previousStatus);
 
         return StatusCode(StatusCodes.Status201Created, new ManualMitigationDto
         {
@@ -145,7 +145,7 @@ public class SecurityDashboardController : ManagementApiControllerBase
         });
 
         if (previousStatus != currentStatus)
-            await _webhookNotifier.NotifyAsync(currentStatus, DateTime.UtcNow, []);
+            await _webhookNotifier.NotifyAsync(currentStatus, DateTime.UtcNow, [], previousStatus);
 
         return NoContent();
     }

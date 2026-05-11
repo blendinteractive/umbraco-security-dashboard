@@ -8,5 +8,6 @@ public interface IWebhookNotifier
         string overallStatus,
         DateTime checkedAt,
         IReadOnlyList<AdvisoryRecord> affectedAdvisories,
+        string? previousStatus = null,
         CancellationToken cancellationToken = default);
 }

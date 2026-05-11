@@ -13,16 +13,22 @@ public class WebhookNotifier : IWebhookNotifier
     private readonly WebhookSettings _settings;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<WebhookNotifier> _logger;
+    private readonly IAuditLogRepository _auditLogRepository;
+    private readonly IVulnerabilityCheckRepository _checkRepository;
     private readonly bool _dispatchEnabled;
 
     public WebhookNotifier(
         IOptions<SecurityDashboardSettings> settings,
         IHttpClientFactory httpClientFactory,
-        ILogger<WebhookNotifier> logger)
+        ILogger<WebhookNotifier> logger,
+        IAuditLogRepository auditLogRepository,
+        IVulnerabilityCheckRepository checkRepository)
     {
         _settings = settings.Value.Webhook;
         _httpClientFactory = httpClientFactory;
         _logger = logger;
+        _auditLogRepository = auditLogRepository;
+        _checkRepository = checkRepository;
 
         if (_settings.TimeoutSeconds <= 0)
             _logger.LogWarning(
@@ -53,6 +59,7 @@ public class WebhookNotifier : IWebhookNotifier
         string overallStatus,
         DateTime checkedAt,
         IReadOnlyList<AdvisoryRecord> affectedAdvisories,
+        string? previousStatus = null,
         CancellationToken cancellationToken = default)
     {
         if (!_dispatchEnabled)
@@ -62,7 +69,13 @@ public class WebhookNotifier : IWebhookNotifier
             .Select(a => new WebhookAffectedPackage(a.PackageName, a.InstalledVersion, a.AdvisoryUrl, a.Severity))
             .ToArray();
 
-        var payload = new WebhookPayload(_settings.SiteUrl!, overallStatus, checkedAt, packages);
+        var summary = await _auditLogRepository.GetWebhookSummaryAsync();
+        var latestCheck = await _checkRepository.GetLatestSuccessfulCheckAsync();
+
+        var payload = new WebhookPayload(
+            _settings.SiteUrl!, overallStatus, previousStatus, checkedAt,
+            latestCheck?.NextScheduledCheckAt, packages,
+            summary.LastNotice, summary.LastResolved, summary.ResolutionType, summary.ResolvedBy);
 
         var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
         var client = _httpClientFactory.CreateClient("WebhookNotifier");
