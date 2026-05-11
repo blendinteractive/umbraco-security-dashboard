@@ -12,6 +12,7 @@ public class SecurityDashboardMigrationPlan : PackageMigrationPlan
     {
         From(string.Empty)
             .To<CreateSecurityDashboardTables>("SecurityDashboard-1.0.0")
-            .To<AddManualMitigationTable>("SecurityDashboard-1.1.0");
+            .To<AddManualMitigationTable>("SecurityDashboard-1.1.0")
+            .To<AddAuditLogTable>("SecurityDashboard-1.2.0");
     }
 }

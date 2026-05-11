@@ -19,10 +19,10 @@
 
 **Purpose**: Create the new table, POCO, and repository interface that every user story depends on. No user story work can begin until this phase is complete.
 
-- [ ] T001 [P] Create `AuditLogRecord` NPoco POCO in `src/Umbraco.SecurityDashboard/Models/Db/AuditLogRecord.cs` with columns: `Id`, `Timestamp`, `OverallStatus`, `ActionType`, `ActorName`, `Description`; annotate with `[TableName("SecurityDashboard_AuditLog")]` and `[PrimaryKey("Id")]`
-- [ ] T002 [P] Create `IAuditLogRepository` interface in `src/Umbraco.SecurityDashboard/Services/IAuditLogRepository.cs` with `Task AppendAsync(AuditLogRecord record)` and `Task<AuditLogPage> GetPagedAsync(int skip, int take)`; define `AuditLogPage(IReadOnlyList<AuditLogRecord> Entries, int TotalCount)` record in the same file
-- [ ] T003 Create `AddAuditLogTable` migration class in `src/Umbraco.SecurityDashboard/Migrations/AddAuditLogTable.cs` that creates `SecurityDashboard_AuditLog` with all columns from the data model and adds index `IX_SecurityDashboard_AuditLog_Timestamp` on `(Timestamp DESC)`
-- [ ] T004 Update `src/Umbraco.SecurityDashboard/Migrations/SecurityDashboardMigrationPlan.cs` to add `.To<AddAuditLogTable>("SecurityDashboard-1.2.0")` step in the migration chain
+- [X] T001 [P] Create `AuditLogRecord` NPoco POCO in `src/Umbraco.SecurityDashboard/Models/Db/AuditLogRecord.cs` with columns: `Id`, `Timestamp`, `OverallStatus`, `ActionType`, `ActorName`, `Description`; annotate with `[TableName("SecurityDashboard_AuditLog")]` and `[PrimaryKey("Id")]`
+- [X] T002 [P] Create `IAuditLogRepository` interface in `src/Umbraco.SecurityDashboard/Services/IAuditLogRepository.cs` with `Task AppendAsync(AuditLogRecord record)` and `Task<AuditLogPage> GetPagedAsync(int skip, int take)`; define `AuditLogPage(IReadOnlyList<AuditLogRecord> Entries, int TotalCount)` record in the same file
+- [X] T003 Create `AddAuditLogTable` migration class in `src/Umbraco.SecurityDashboard/Migrations/AddAuditLogTable.cs` that creates `SecurityDashboard_AuditLog` with all columns from the data model and adds index `IX_SecurityDashboard_AuditLog_Timestamp` on `(Timestamp DESC)`
+- [X] T004 Update `src/Umbraco.SecurityDashboard/Migrations/SecurityDashboardMigrationPlan.cs` to add `.To<AddAuditLogTable>("SecurityDashboard-1.2.0")` step in the migration chain
 
 **Checkpoint**: DB schema, POCO, and interface defined. Repository tests and implementation can now begin.
 
@@ -34,9 +34,9 @@
 
 **⚠️ CRITICAL**: Write tests before implementation (constitution requirement).
 
-- [ ] T005 Write unit tests (test-first) for `AuditLogRepository` covering: `AppendAsync` inserts a record, `GetPagedAsync` returns correct page and `TotalCount`, `GetPagedAsync` returns empty page when no records exist; create `tests/Umbraco.SecurityDashboard.Tests/Services/AuditLogRepositoryTests.cs`
-- [ ] T006 Implement `AuditLogRepository` in `src/Umbraco.SecurityDashboard/Services/AuditLogRepository.cs` using NPoco + `IScopeProvider`; `AppendAsync` inserts via `db.InsertAsync`; `GetPagedAsync` runs two queries — one for the page (`ORDER BY Timestamp DESC LIMIT/OFFSET`) and one `COUNT(*)`; make T005 tests pass
-- [ ] T007 Register `IAuditLogRepository` → `AuditLogRepository` as scoped in `src/Umbraco.SecurityDashboard/Composers/SecurityDashboardComposer.cs`
+- [X] T005 Write unit tests (test-first) for `AuditLogRepository` covering: `AppendAsync` inserts a record, `GetPagedAsync` returns correct page and `TotalCount`, `GetPagedAsync` returns empty page when no records exist; create `tests/Umbraco.SecurityDashboard.Tests/Services/AuditLogRepositoryTests.cs`
+- [X] T006 Implement `AuditLogRepository` in `src/Umbraco.SecurityDashboard/Services/AuditLogRepository.cs` using NPoco + `IScopeProvider`; `AppendAsync` inserts via `db.InsertAsync`; `GetPagedAsync` runs two queries — one for the page (`ORDER BY Timestamp DESC LIMIT/OFFSET`) and one `COUNT(*)`; make T005 tests pass
+- [X] T007 Register `IAuditLogRepository` → `AuditLogRepository` as scoped in `src/Umbraco.SecurityDashboard/Composers/SecurityDashboardComposer.cs`
 
 **Checkpoint**: `AuditLogRepository` fully functional, tests passing, registered in DI. All user stories can now be implemented independently.
 
