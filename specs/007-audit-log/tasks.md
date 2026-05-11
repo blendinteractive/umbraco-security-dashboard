@@ -73,12 +73,12 @@
 
 ### Tests for User Story 2 ⚠️ Write FIRST — ensure they FAIL before implementation
 
-- [ ] T015 [P] [US2] Write unit tests for `VulnerabilityService` state-change detection and audit logging: state changes (NeverChecked→any, Safe→Vulnerable, Vulnerable→Safe, Vulnerable→Mitigated) produce one `AppendAsync` call with correct fields; no state change produces zero `AppendAsync` calls; create `tests/Umbraco.SecurityDashboard.Tests/Services/VulnerabilityServiceAuditTests.cs`
+- [X] T015 [P] [US2] Write unit tests for `VulnerabilityService` state-change detection and audit logging: state changes (NeverChecked→any, Safe→Vulnerable, Vulnerable→Safe, Vulnerable→Mitigated) produce one `AppendAsync` call with correct fields; no state change produces zero `AppendAsync` calls; create `tests/Umbraco.SecurityDashboard.Tests/Services/VulnerabilityServiceAuditTests.cs`
 
 ### Implementation for User Story 2
 
-- [ ] T016 [US2] Add `Task<string> GetCurrentOverallStatusAsync()` to `IVulnerabilityService` in `src/Umbraco.SecurityDashboard/Services/IVulnerabilityService.cs` (or the interface file as it currently exists); extract the existing inline status-computation from `GetDashboardStatusAsync()` into this new method in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`
-- [ ] T017 [US2] Modify `VulnerabilityService.RunCheckAsync()` in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`: call `GetCurrentOverallStatusAsync()` before saving new results to capture `previousStatus`; after saving, compute `newStatus`; if `previousStatus != newStatus`, call `IAuditLogRepository.AppendAsync` with `ActionType = "Automatic"`, `ActorName = null`, `Description = "Scheduled vulnerability check completed"`, `OverallStatus = newStatus`, `Timestamp = DateTime.UtcNow`; make T015 tests pass
+- [X] T016 [US2] Add `Task<string> GetCurrentOverallStatusAsync()` to `IVulnerabilityService` in `src/Umbraco.SecurityDashboard/Services/IVulnerabilityService.cs` (or the interface file as it currently exists); extract the existing inline status-computation from `GetDashboardStatusAsync()` into this new method in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`
+- [X] T017 [US2] Modify `VulnerabilityService.RunCheckAsync()` in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`: call `GetCurrentOverallStatusAsync()` before saving new results to capture `previousStatus`; after saving, compute `newStatus`; if `previousStatus != newStatus`, call `IAuditLogRepository.AppendAsync` with `ActionType = "Automatic"`, `ActorName = null`, `Description = "Scheduled vulnerability check completed"`, `OverallStatus = newStatus`, `Timestamp = DateTime.UtcNow`; make T015 tests pass
 
 **Checkpoint**: `RunCheckAsync()` writes exactly one audit entry per state change and zero entries when state is unchanged.
 
