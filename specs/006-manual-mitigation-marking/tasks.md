@@ -75,12 +75,12 @@
 
 ### Tests for User Story 2 ⚠️ Write FIRST — ensure they FAIL before implementing T020–T021
 
-- [ ] T019 [P] [US2] Add DeleteMitigation controller unit tests (204 on success, 404 not found, 401 unauthorised) in `tests/Umbraco.SecurityDashboard.Tests/Controllers/MitigationControllerTests.cs`
+- [x] T019 [P] [US2] Add DeleteMitigation controller unit tests (204 on success, 404 not found, 401 unauthorised) in `tests/Umbraco.SecurityDashboard.Tests/Controllers/MitigationControllerTests.cs`
 
 ### Implementation for User Story 2
 
-- [ ] T020 [US2] Add `[HttpDelete("advisories/{ghsaId}/mitigations")]` endpoint: call DeleteMitigationAsync, return 204/404 in `src/Umbraco.SecurityDashboard/Controllers/SecurityDashboardController.cs`
-- [ ] T021 [US2] Add "Remove Mitigation" uui-button (visible only for manually mitigated advisories) and `<security-dashboard-mitigation-dialog mode="remove">` integration to `client/src/components/advisory-item.element.ts`
+- [x] T020 [US2] Add `[HttpDelete("advisories/{ghsaId}/mitigations")]` endpoint: call DeleteMitigationAsync, return 204/404 in `src/Umbraco.SecurityDashboard/Controllers/SecurityDashboardController.cs`
+- [x] T021 [US2] Add "Remove Mitigation" uui-button (visible only for manually mitigated advisories) and `<security-dashboard-mitigation-dialog mode="remove">` integration to `client/src/components/advisory-item.element.ts`
 
 **Checkpoint**: Both user stories are functional — administrators can mark and remove mitigations independently.
 

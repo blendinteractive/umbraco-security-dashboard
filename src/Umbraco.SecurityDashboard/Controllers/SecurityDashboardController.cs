@@ -76,4 +76,17 @@ public class SecurityDashboardController : ManagementApiControllerBase
             MitigatedBy = record.MitigatedBy
         });
     }
+
+    [HttpDelete("advisories/{ghsaId}/mitigations")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> DeleteMitigation(string ghsaId)
+    {
+        var deleted = await _mitigationRepository.DeleteMitigationAsync(ghsaId);
+        if (!deleted)
+            return NotFound(new ProblemDetails { Title = $"No manual mitigation found for advisory {ghsaId}." });
+
+        return NoContent();
+    }
 }

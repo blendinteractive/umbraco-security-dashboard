@@ -88,4 +88,36 @@ public class MitigationControllerTests
         await mitigationRepo.Received(1).CreateMitigationAsync(
             Arg.Is<ManualMitigationRecord>(r => r.MitigatedBy == "Unknown"));
     }
+
+    [Fact]
+    public async Task DeleteMitigation_WhenMitigationExists_Returns204()
+    {
+        var (controller, repo) = CreateSut();
+        repo.DeleteMitigationAsync("GHSA-1234-5678-abcd").Returns(true);
+
+        var result = await controller.DeleteMitigation("GHSA-1234-5678-abcd");
+
+        Assert.IsType<NoContentResult>(result);
+        await repo.Received(1).DeleteMitigationAsync("GHSA-1234-5678-abcd");
+    }
+
+    [Fact]
+    public async Task DeleteMitigation_WhenMitigationNotFound_Returns404()
+    {
+        var (controller, repo) = CreateSut();
+        repo.DeleteMitigationAsync("GHSA-not-found").Returns(false);
+
+        var result = await controller.DeleteMitigation("GHSA-not-found");
+
+        var notFound = Assert.IsType<NotFoundObjectResult>(result);
+        Assert.Equal(404, notFound.StatusCode);
+    }
+
+    [Fact]
+    public async Task DeleteMitigation_ControllerRequiresBackOfficeAccess()
+    {
+        var attributes = typeof(SecurityDashboardController)
+            .GetCustomAttributes(typeof(Microsoft.AspNetCore.Authorization.AuthorizeAttribute), true);
+        Assert.NotEmpty(attributes);
+    }
 }
