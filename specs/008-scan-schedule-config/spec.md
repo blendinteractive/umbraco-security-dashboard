@@ -5,6 +5,14 @@
 **Status**: Draft  
 **Input**: User description: "We should allow developers to set the schedule for vulnerability checks in the appSettings. Let's add options for daily or weekly scans, and for setting the day of scan and time of day by hour and minute"
 
+## Clarifications
+
+### Session 2026-06-02
+
+- Q: If a scheduled check was missed because the app was down, should it run immediately on the next startup, or wait for the next scheduled occurrence? → A: Run immediately on startup if the last check is older than one full configured period (24 h for Daily, 7 days for Weekly).
+- Q: Should the dashboard stale-warning threshold adapt to the configured schedule frequency? → A: Auto-derive — Daily uses a 48-hour threshold, Weekly uses a 9-day threshold.
+- Q: Should a `Disabled` frequency option be supported to suppress automatic scanning entirely? → A: Yes — support `Disabled` as a valid frequency value; when set, no automatic checks run and the dashboard displays a prominent warning that scanning is disabled.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Configure Daily Scan Time (Priority: P1)
@@ -56,9 +64,25 @@ A developer visits the security dashboard and can see when the next vulnerabilit
 
 ---
 
+### User Story 4 - Disable Automatic Scanning in Dev Environments (Priority: P3)
+
+A developer working locally sets the frequency to `Disabled` in `appsettings.Development.json` to prevent background checks from running during development. The dashboard clearly indicates that automatic scanning is off, so the developer is aware and can trigger a manual check if needed.
+
+**Why this priority**: Useful for reducing noise in development, but not needed for production use cases.
+
+**Independent Test**: Can be tested by setting frequency to `Disabled`, restarting, and confirming no scan runs and the dashboard shows a warning.
+
+**Acceptance Scenarios**:
+
+1. **Given** frequency is set to `Disabled`, **When** the application starts, **Then** no automatic vulnerability check runs on startup.
+2. **Given** frequency is set to `Disabled`, **When** the dashboard loads, **Then** a prominent warning is displayed indicating that automatic scanning has been disabled.
+3. **Given** frequency is set to `Disabled`, **When** the application is running, **Then** no scheduled check is ever triggered automatically.
+
+---
+
 ### Edge Cases
 
-- What happens when the system restarts and the configured scan time has already passed today (daily) or this week (weekly)? — The next occurrence should be calculated correctly.
+- What happens when the system restarts and the configured scan time has already passed today (daily) or this week (weekly)? — If the last check was more than one configured period ago (24 h / 7 days), run immediately; otherwise calculate the next occurrence normally.
 - What happens when hour=0 and minute=0 (midnight) is configured? — Should be treated as a valid time (00:00).
 - What happens when a weekly scan is scheduled for the same day every time the app restarts mid-week? — The system should not re-trigger a check that already ran this week.
 - What happens when the schedule configuration is changed while the application is running? — The new schedule takes effect on the next application restart (configuration is read at startup).
@@ -67,14 +91,16 @@ A developer visits the security dashboard and can see when the next vulnerabilit
 
 ### Functional Requirements
 
-- **FR-001**: The system MUST support a configurable scan frequency of either `Daily` or `Weekly`.
+- **FR-001**: The system MUST support a configurable scan frequency of `Daily`, `Weekly`, or `Disabled`.
 - **FR-002**: The system MUST allow the scan time to be specified by hour (0–23) and minute (0–59).
 - **FR-003**: When frequency is `Weekly`, the system MUST allow the day of the week to be specified (e.g., Monday through Sunday).
 - **FR-004**: When no schedule is configured, the system MUST default to a daily scan at 4:00 AM, preserving existing behavior.
 - **FR-005**: The system MUST validate schedule configuration values at startup and report clear errors for invalid values (out-of-range hour/minute, unrecognized frequency or day).
 - **FR-006**: The calculated next scheduled check time MUST be exposed through the dashboard status response so it can be displayed in the UI.
 - **FR-007**: The schedule configuration MUST be set via the existing `appsettings.json` / `appsettings.{Environment}.json` configuration mechanism under the existing `Umbraco:SecurityDashboard` section.
-- **FR-008**: The startup check logic MUST respect the configured schedule when determining whether to run an immediate check on application start.
+- **FR-010**: When frequency is `Disabled`, the system MUST NOT run automatic vulnerability checks (neither on a schedule nor on startup). The dashboard MUST display a prominent warning indicating that automatic scanning has been disabled.
+- **FR-009**: The dashboard stale-warning threshold MUST be derived from the configured frequency: 48 hours for `Daily` schedules and 9 days for `Weekly` schedules. A check is considered stale when the last successful check occurred more than this threshold ago.
+- **FR-008**: On application startup, the system MUST run an immediate vulnerability check if the last successful check occurred more than one full configured period ago (24 hours for `Daily`; 7 days for `Weekly`). If the last check is within the configured period, the startup check is skipped and the system waits for the next scheduled occurrence.
 
 ### Key Entities
 
@@ -90,6 +116,8 @@ A developer visits the security dashboard and can see when the next vulnerabilit
 - **SC-003**: The system correctly calculates the next occurrence for both daily and weekly schedules across all valid hour/minute/day combinations (verified via automated tests).
 - **SC-004**: Invalid schedule configuration values produce an error at startup rather than silently applying a fallback, ensuring misconfigurations are not hidden from developers.
 - **SC-005**: The existing default behavior (daily at 4:00 AM) is preserved when no schedule configuration is provided, so existing deployments require no changes.
+- **SC-006**: The dashboard stale warning does not fire for a correctly operating weekly schedule — a check completed within the last 9 days does not trigger the stale indicator.
+- **SC-007**: When scanning is disabled, the dashboard displays a visible warning on every load, ensuring no developer overlooks that automatic checks are suppressed.
 
 ## Assumptions
 

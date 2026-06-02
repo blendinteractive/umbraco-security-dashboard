@@ -31,4 +31,9 @@
 
 ## Notes
 
-All checklist items pass. Spec is ready for `/speckit-plan`.
+All checklist items pass. 3 clarifications recorded on 2026-06-02:
+- Startup catch-up behavior for missed scans (FR-008)
+- Stale-warning threshold auto-derived from frequency (FR-009, SC-006)
+- `Disabled` frequency with dashboard warning (FR-010, SC-007)
+
+Spec is ready for `/speckit-plan`.
