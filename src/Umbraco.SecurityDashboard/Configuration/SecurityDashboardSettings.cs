@@ -16,4 +16,6 @@ public class SecurityDashboardSettings
     /// Settings that only apply in development environments.
     /// </summary>
     public DevelopmentSettings Development { get; set; } = new();
+
+    public ScanScheduleSettings ScanSchedule { get; set; } = new();
 }

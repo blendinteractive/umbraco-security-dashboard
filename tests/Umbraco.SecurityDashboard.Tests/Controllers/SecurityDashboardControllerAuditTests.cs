@@ -241,7 +241,7 @@ public class SecurityDashboardControllerAuditTests
         await controller.CreateMitigation("GHSA-1234-5678-abcd", new CreateMitigationRequest { Description = "Fixed" });
 
         await webhookNotifier.Received(1).NotifyAsync(
-            Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<IReadOnlyList<AdvisoryRecord>>(), Arg.Any<CancellationToken>());
+            Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<IReadOnlyList<AdvisoryRecord>>(), Arg.Any<string?>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -258,7 +258,7 @@ public class SecurityDashboardControllerAuditTests
         await controller.CreateMitigation("GHSA-1234-5678-abcd", new CreateMitigationRequest { Description = "Fixed" });
 
         await webhookNotifier.DidNotReceive().NotifyAsync(
-            Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<IReadOnlyList<AdvisoryRecord>>(), Arg.Any<CancellationToken>());
+            Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<IReadOnlyList<AdvisoryRecord>>(), Arg.Any<string?>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -277,7 +277,7 @@ public class SecurityDashboardControllerAuditTests
         await controller.DeleteMitigation("GHSA-1234-5678-abcd");
 
         await webhookNotifier.Received(1).NotifyAsync(
-            Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<IReadOnlyList<AdvisoryRecord>>(), Arg.Any<CancellationToken>());
+            Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<IReadOnlyList<AdvisoryRecord>>(), Arg.Any<string?>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -295,6 +295,6 @@ public class SecurityDashboardControllerAuditTests
         await controller.DeleteMitigation("GHSA-1234-5678-abcd");
 
         await webhookNotifier.DidNotReceive().NotifyAsync(
-            Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<IReadOnlyList<AdvisoryRecord>>(), Arg.Any<CancellationToken>());
+            Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<IReadOnlyList<AdvisoryRecord>>(), Arg.Any<string?>(), Arg.Any<CancellationToken>());
     }
 }

@@ -25,12 +25,12 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T001 [P] Create `ScanFrequency` enum (Daily/Weekly/Disabled) in `src/Umbraco.SecurityDashboard/Configuration/ScanFrequency.cs`
-- [ ] T002 [P] Create `ScanScheduleSettings` POCO with `Frequency`, `Hour`, `Minute`, `DayOfWeek` properties and defaults in `src/Umbraco.SecurityDashboard/Configuration/ScanScheduleSettings.cs`
-- [ ] T003 [P] Add `public ScanScheduleSettings ScanSchedule { get; set; } = new();` property to `SecurityDashboardSettings` in `src/Umbraco.SecurityDashboard/Configuration/SecurityDashboardSettings.cs`
-- [ ] T004 Create `ScanSchedule` static helper with `ComputeNextOccurrence`, `GetCheckInterval`, and `GetStaleThreshold` methods (Daily / Weekly / Disabled paths per data-model.md) in `src/Umbraco.SecurityDashboard/Scheduling/ScanSchedule.cs`
-- [ ] T005 Create `SecurityDashboardSettingsValidator` implementing `IValidateOptions<SecurityDashboardSettings>` that validates `Hour ∈ [0,23]`, `Minute ∈ [0,59]`, `DayOfWeek` validity, and `Frequency` validity in `src/Umbraco.SecurityDashboard/Configuration/SecurityDashboardSettingsValidator.cs`
-- [ ] T006 Register `SecurityDashboardSettingsValidator` as `IValidateOptions<SecurityDashboardSettings>` singleton and call `.ValidateOnStart()` in `src/Umbraco.SecurityDashboard/Composers/SecurityDashboardComposer.cs`
+- [X] T001 [P] Create `ScanFrequency` enum (Daily/Weekly/Disabled) in `src/Umbraco.SecurityDashboard/Configuration/ScanFrequency.cs`
+- [X] T002 [P] Create `ScanScheduleSettings` POCO with `Frequency`, `Hour`, `Minute`, `DayOfWeek` properties and defaults in `src/Umbraco.SecurityDashboard/Configuration/ScanScheduleSettings.cs`
+- [X] T003 [P] Add `public ScanScheduleSettings ScanSchedule { get; set; } = new();` property to `SecurityDashboardSettings` in `src/Umbraco.SecurityDashboard/Configuration/SecurityDashboardSettings.cs`
+- [X] T004 Create `ScanSchedule` static helper with `ComputeNextOccurrence`, `GetCheckInterval`, and `GetStaleThreshold` methods (Daily / Weekly / Disabled paths per data-model.md) in `src/Umbraco.SecurityDashboard/Scheduling/ScanSchedule.cs`
+- [X] T005 Create `SecurityDashboardSettingsValidator` implementing `IValidateOptions<SecurityDashboardSettings>` that validates `Hour ∈ [0,23]`, `Minute ∈ [0,59]`, `DayOfWeek` validity, and `Frequency` validity in `src/Umbraco.SecurityDashboard/Configuration/SecurityDashboardSettingsValidator.cs`
+- [X] T006 Register `SecurityDashboardSettingsValidator` as `IValidateOptions<SecurityDashboardSettings>` singleton and call `.ValidateOnStart()` in `src/Umbraco.SecurityDashboard/Composers/SecurityDashboardComposer.cs`
 
 **Checkpoint**: Foundation ready — enum, settings POCO, static helper, and validator all exist. User story work can now begin.
 
@@ -44,14 +44,14 @@
 
 ### Tests for User Story 1 ⚠️ Write first — must FAIL before implementation
 
-- [ ] T007 [P] [US1] Create `ScanScheduleTests.cs` covering daily scenarios: default 4 AM, custom 2:30 AM, past-time-rolls-to-next-day, and midnight (00:00) edge case in `tests/Umbraco.SecurityDashboard.Tests/Scheduling/ScanScheduleTests.cs`
-- [ ] T008 [P] [US1] Create `SecurityDashboardSettingsValidatorTests.cs` with test cases for `Hour > 23` and `Minute > 59` producing `OptionsValidationException` in `tests/Umbraco.SecurityDashboard.Tests/Configuration/SecurityDashboardSettingsValidatorTests.cs`
+- [X] T007 [P] [US1] Create `ScanScheduleTests.cs` covering daily scenarios: default 4 AM, custom 2:30 AM, past-time-rolls-to-next-day, and midnight (00:00) edge case in `tests/Umbraco.SecurityDashboard.Tests/Scheduling/ScanScheduleTests.cs`
+- [X] T008 [P] [US1] Create `SecurityDashboardSettingsValidatorTests.cs` with test cases for `Hour > 23` and `Minute > 59` producing `OptionsValidationException` in `tests/Umbraco.SecurityDashboard.Tests/Configuration/SecurityDashboardSettingsValidatorTests.cs`
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] Update `VulnerabilityCheckTask` to inject `IOptions<SecurityDashboardSettings>` and use `ScanSchedule.GetCheckInterval` for `Period` and `ScanSchedule.ComputeNextOccurrence` for initial `Delay` in `src/Umbraco.SecurityDashboard/Scheduling/VulnerabilityCheckTask.cs`
-- [ ] T010 [US1] Update `StartupVulnerabilityCheckHandler` to inject `IOptions<SecurityDashboardSettings>` and replace `VulnerabilityService.CheckInterval` reference with `ScanSchedule.GetCheckInterval(settings.Value.ScanSchedule)` in `src/Umbraco.SecurityDashboard/Scheduling/StartupVulnerabilityCheckHandler.cs`
-- [ ] T011 [US1] Update `StartupVulnerabilityCheckHandlerTests.cs` to remove all `VulnerabilityService.CheckInterval` references and pass the check interval directly from a `ScanScheduleSettings` instance in `tests/Umbraco.SecurityDashboard.Tests/Scheduling/StartupVulnerabilityCheckHandlerTests.cs`
+- [X] T009 [US1] Update `VulnerabilityCheckTask` to inject `IOptions<SecurityDashboardSettings>` and use `ScanSchedule.GetCheckInterval` for `Period` and `ScanSchedule.ComputeNextOccurrence` for initial `Delay` in `src/Umbraco.SecurityDashboard/Scheduling/VulnerabilityCheckTask.cs`
+- [X] T010 [US1] Update `StartupVulnerabilityCheckHandler` to inject `IOptions<SecurityDashboardSettings>` and replace `VulnerabilityService.CheckInterval` reference with `ScanSchedule.GetCheckInterval(settings.Value.ScanSchedule)` in `src/Umbraco.SecurityDashboard/Scheduling/StartupVulnerabilityCheckHandler.cs`
+- [X] T011 [US1] Update `StartupVulnerabilityCheckHandlerTests.cs` to remove all `VulnerabilityService.CheckInterval` references and pass the check interval directly from a `ScanScheduleSettings` instance in `tests/Umbraco.SecurityDashboard.Tests/Scheduling/StartupVulnerabilityCheckHandlerTests.cs`
 
 **Checkpoint**: Daily scheduling with configurable hour/minute is fully functional and tested independently. Default 4 AM behavior preserved.
 

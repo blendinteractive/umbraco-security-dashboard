@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Notifications;
@@ -19,6 +20,8 @@ public class SecurityDashboardComposer : IComposer
         // Settings
         builder.Services.Configure<SecurityDashboardSettings>(
             builder.Config.GetSection(SecurityDashboardSettings.SectionName));
+        builder.Services.AddSingleton<IValidateOptions<SecurityDashboardSettings>, SecurityDashboardSettingsValidator>();
+        builder.Services.AddOptions<SecurityDashboardSettings>().ValidateOnStart();
 
         // Data access
         builder.Services.AddSingleton<IVulnerabilityCheckRepository, VulnerabilityCheckRepository>();
