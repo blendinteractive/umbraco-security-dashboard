@@ -90,6 +90,40 @@ public class SecurityDashboardSettingsValidatorTests
         Assert.True(result.Succeeded);
     }
 
+    // ── DayOfWeek validation ───────────────────────────────────────────────
+
+    [Theory]
+    [InlineData(7)]    // past Saturday (0–6 are valid)
+    [InlineData(-1)]   // negative
+    [InlineData(100)]  // way out of range
+    public void Validate_InvalidDayOfWeek_Fails(int dayOfWeek)
+    {
+        var settings = new SecurityDashboardSettings
+        {
+            ScanSchedule = new ScanScheduleSettings { DayOfWeek = (DayOfWeek)dayOfWeek }
+        };
+
+        var result = Validate(settings);
+
+        Assert.False(result.Succeeded);
+        Assert.Contains(result.Failures!, f => f.Contains("DayOfWeek"));
+    }
+
+    [Theory]
+    [InlineData(0)]  // Sunday
+    [InlineData(1)]  // Monday
+    [InlineData(6)]  // Saturday
+    public void Validate_ValidDayOfWeek_Succeeds(int dayOfWeek)
+    {
+        var settings = new SecurityDashboardSettings
+        {
+            ScanSchedule = new ScanScheduleSettings { DayOfWeek = (DayOfWeek)dayOfWeek }
+        };
+
+        var result = Validate(settings);
+        Assert.True(result.Succeeded);
+    }
+
     // ── Multiple errors at once ────────────────────────────────────────────
 
     [Fact]

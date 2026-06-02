@@ -65,12 +65,12 @@
 
 ### Tests for User Story 2 ⚠️ Write first — must FAIL before implementation
 
-- [ ] T012 [P] [US2] Add weekly schedule test cases to `ScanScheduleTests.cs`: next Monday at 3 AM, same-day-time-already-passed rolls to next week, same-day-time-not-yet-passed returns today, and day-of-week walk (today is Tuesday, configured for Friday) in `tests/Umbraco.SecurityDashboard.Tests/Scheduling/ScanScheduleTests.cs`
-- [ ] T013 [P] [US2] Add weekly validation test cases to `SecurityDashboardSettingsValidatorTests.cs`: invalid `DayOfWeek` string produces `OptionsValidationException` in `tests/Umbraco.SecurityDashboard.Tests/Configuration/SecurityDashboardSettingsValidatorTests.cs`
+- [X] T012 [P] [US2] Add weekly schedule test cases to `ScanScheduleTests.cs`: next Monday at 3 AM, same-day-time-already-passed rolls to next week, same-day-time-not-yet-passed returns today, and day-of-week walk (today is Tuesday, configured for Friday) in `tests/Umbraco.SecurityDashboard.Tests/Scheduling/ScanScheduleTests.cs`
+- [X] T013 [P] [US2] Add weekly validation test cases to `SecurityDashboardSettingsValidatorTests.cs`: invalid `DayOfWeek` string produces `OptionsValidationException` in `tests/Umbraco.SecurityDashboard.Tests/Configuration/SecurityDashboardSettingsValidatorTests.cs`
 
 ### Implementation for User Story 2
 
-- [ ] T014 [US2] Verify `ScanSchedule.ComputeNextOccurrence` weekly path satisfies all US2 acceptance scenarios; confirm `GetCheckInterval` returns `TimeSpan.FromDays(7)` for `Weekly` in `src/Umbraco.SecurityDashboard/Scheduling/ScanSchedule.cs`
+- [X] T014 [US2] Verify `ScanSchedule.ComputeNextOccurrence` weekly path satisfies all US2 acceptance scenarios; confirm `GetCheckInterval` returns `TimeSpan.FromDays(7)` for `Weekly` in `src/Umbraco.SecurityDashboard/Scheduling/ScanSchedule.cs`
 
 **Checkpoint**: Weekly scheduling with configurable day-of-week, hour, and minute is fully functional and tested independently.
 
@@ -84,11 +84,11 @@
 
 ### Tests for User Story 3 ⚠️ Write first — must FAIL before implementation
 
-- [ ] T015 [P] [US3] Update `VulnerabilityServiceTests.cs` with tests verifying stale threshold is 48 h for Daily and 9 days for Weekly (replaces hardcoded constant assertions) in `tests/Umbraco.SecurityDashboard.Tests/Services/VulnerabilityServiceTests.cs`
+- [X] T015 [P] [US3] Update `VulnerabilityServiceTests.cs` with tests verifying stale threshold is 48 h for Daily and 9 days for Weekly (replaces hardcoded constant assertions) in `tests/Umbraco.SecurityDashboard.Tests/Services/VulnerabilityServiceTests.cs`
 
 ### Implementation for User Story 3
 
-- [ ] T016 [US3] Update `VulnerabilityService` to remove static `CheckInterval` and `StaleThreshold` fields and use `ScanSchedule.GetStaleThreshold(settings.ScanSchedule)` for stale calculation and `ScanSchedule.GetCheckInterval` where needed in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`
+- [X] T016 [US3] Update `VulnerabilityService` to remove static `CheckInterval` and `StaleThreshold` fields and use `ScanSchedule.GetStaleThreshold(settings.ScanSchedule)` for stale calculation and `ScanSchedule.GetCheckInterval` where needed in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`
 
 **Checkpoint**: Dashboard `nextScheduledCheckAt` reflects the active schedule configuration; stale threshold adapts to configured frequency.
 
@@ -102,17 +102,17 @@
 
 ### Tests for User Story 4 ⚠️ Write first — must FAIL before implementation
 
-- [ ] T017 [P] [US4] Add Disabled-frequency test cases to `ScanScheduleTests.cs`: `ComputeNextOccurrence` returns `DateTime.MaxValue`, `GetCheckInterval` returns `TimeSpan.MaxValue`, `GetStaleThreshold` returns 9-day value in `tests/Umbraco.SecurityDashboard.Tests/Scheduling/ScanScheduleTests.cs`
-- [ ] T018 [P] [US4] Add `ScanningDisabled` tests to `VulnerabilityServiceTests.cs`: response sets `ScanningDisabled = true` and `IsStale = false` when frequency is Disabled in `tests/Umbraco.SecurityDashboard.Tests/Services/VulnerabilityServiceTests.cs`
+- [X] T017 [P] [US4] Add Disabled-frequency test cases to `ScanScheduleTests.cs`: `ComputeNextOccurrence` returns `DateTime.MaxValue`, `GetCheckInterval` returns `TimeSpan.MaxValue`, `GetStaleThreshold` returns 9-day value in `tests/Umbraco.SecurityDashboard.Tests/Scheduling/ScanScheduleTests.cs`
+- [X] T018 [P] [US4] Add `ScanningDisabled` tests to `VulnerabilityServiceTests.cs`: response sets `ScanningDisabled = true` and `IsStale = false` when frequency is Disabled in `tests/Umbraco.SecurityDashboard.Tests/Services/VulnerabilityServiceTests.cs`
 
 ### Implementation for User Story 4
 
-- [ ] T019 [P] [US4] Update `SecurityDashboardComposer` to read `Umbraco:SecurityDashboard:ScanSchedule:Frequency` from `builder.Config` at compose-time and skip `AddRecurringBackgroundJob<VulnerabilityCheckTask>()` when value is `"Disabled"` in `src/Umbraco.SecurityDashboard/Composers/SecurityDashboardComposer.cs`
-- [ ] T020 [P] [US4] Update `StartupVulnerabilityCheckHandler` to check `settings.Value.ScanSchedule.Frequency == ScanFrequency.Disabled` and skip (with a log warning) when Disabled in `src/Umbraco.SecurityDashboard/Scheduling/StartupVulnerabilityCheckHandler.cs`
-- [ ] T021 [P] [US4] Add `public bool ScanningDisabled { get; set; }` to `DashboardStatusResponse` in `src/Umbraco.SecurityDashboard/Models/Api/DashboardStatusResponse.cs`
-- [ ] T022 [US4] Update `VulnerabilityService` to populate `ScanningDisabled = true` and force `IsStale = false` in the status response when frequency is Disabled in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`
-- [ ] T023 [P] [US4] Add `scanningDisabled: boolean` field to `DashboardStatusResponse` interface in `client/src/types.ts`
-- [ ] T024 [US4] Add `@property({ type: Boolean }) scanningDisabled = false;` and a disabled-warning render block (styled with `--uui-color-danger-surface` / `--uui-color-danger` tokens; suppress `isStale` warning when `scanningDisabled` is true) in `client/src/components/staleness-warning.element.ts`
+- [X] T019 [P] [US4] Update `SecurityDashboardComposer` to read `Umbraco:SecurityDashboard:ScanSchedule:Frequency` from `builder.Config` at compose-time and skip `AddRecurringBackgroundJob<VulnerabilityCheckTask>()` when value is `"Disabled"` in `src/Umbraco.SecurityDashboard/Composers/SecurityDashboardComposer.cs`
+- [X] T020 [P] [US4] Update `StartupVulnerabilityCheckHandler` to check `settings.Value.ScanSchedule.Frequency == ScanFrequency.Disabled` and skip (with a log warning) when Disabled in `src/Umbraco.SecurityDashboard/Scheduling/StartupVulnerabilityCheckHandler.cs`
+- [X] T021 [P] [US4] Add `public bool ScanningDisabled { get; set; }` to `DashboardStatusResponse` in `src/Umbraco.SecurityDashboard/Models/Api/DashboardStatusResponse.cs`
+- [X] T022 [US4] Update `VulnerabilityService` to populate `ScanningDisabled = true` and force `IsStale = false` in the status response when frequency is Disabled in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`
+- [X] T023 [P] [US4] Add `scanningDisabled: boolean` field to `DashboardStatusResponse` interface in `client/src/types.ts`
+- [X] T024 [US4] Add `@property({ type: Boolean }) scanningDisabled = false;` and a disabled-warning render block (styled with `--uui-color-danger-surface` / `--uui-color-danger` tokens; suppress `isStale` warning when `scanningDisabled` is true) in `client/src/components/staleness-warning.element.ts`
 
 **Checkpoint**: All four user stories are complete. Disabled mode suppresses scheduling, startup handler, and shows the dashboard warning.
 
@@ -120,8 +120,8 @@
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T025 [P] Document `ScanSchedule` config section in `README.md` — frequency values, `Hour`/`Minute`/`DayOfWeek` fields, defaults, three example JSON snippets (Daily 2:30 AM, Weekly Monday 3 AM, Disabled), and restart-required note
-- [ ] T026 [P] Add `"ScanSchedule": { "Frequency": "Disabled" }` to `Umbraco:SecurityDashboard` section in `demo/appsettings.Development.json` so the demo environment suppresses background scans by default
+- [X] T025 [P] Document `ScanSchedule` config section in `README.md` — frequency values, `Hour`/`Minute`/`DayOfWeek` fields, defaults, three example JSON snippets (Daily 2:30 AM, Weekly Monday 3 AM, Disabled), and restart-required note
+- [X] T026 [P] Add `"ScanSchedule": { "Frequency": "Disabled" }` to `Umbraco:SecurityDashboard` section in `demo/appsettings.Development.json` so the demo environment suppresses background scans by default
 
 ---
 

@@ -13,6 +13,7 @@ public class DashboardStatusResponse
     public bool? LastCheckSucceeded { get; set; }
     public string? LastCheckError { get; set; }
     public DateTime NextScheduledCheckAt { get; set; }
+    public bool ScanningDisabled { get; set; }
     public int AffectedAdvisoryCount { get; set; }
     public int MitigatedAdvisoryCount { get; set; }
 

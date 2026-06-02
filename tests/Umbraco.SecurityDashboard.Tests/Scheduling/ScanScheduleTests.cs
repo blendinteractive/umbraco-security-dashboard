@@ -96,4 +96,101 @@ public class ScanScheduleTests
         var settings = new ScanScheduleSettings { Frequency = ScanFrequency.Daily };
         Assert.Equal(TimeSpan.FromHours(48), ScanSchedule.GetStaleThreshold(settings));
     }
+
+    // ── Weekly scenarios ───────────────────────────────────────────────────
+
+    [Fact]
+    public void ComputeNextOccurrence_Weekly_Monday3Am_WhenTodayIsTuesdayAfterTime_ReturnsNextMonday()
+    {
+        // Tuesday Jan 14 10:00 AM — configured Monday 3:00 AM, already missed this week
+        var settings = new ScanScheduleSettings { Frequency = ScanFrequency.Weekly, DayOfWeek = DayOfWeek.Monday, Hour = 3, Minute = 0 };
+        var from = new DateTime(2025, 1, 14, 10, 0, 0, DateTimeKind.Local); // Tuesday
+
+        var result = ScanSchedule.ComputeNextOccurrence(settings, from);
+
+        var expected = new DateTime(2025, 1, 20, 3, 0, 0, DateTimeKind.Local).ToUniversalTime(); // next Monday
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void ComputeNextOccurrence_Weekly_SameDayTimeAlreadyPassed_ReturnsNextWeek()
+    {
+        // Monday Jan 13 5:00 PM — configured Monday 3:00 AM, already passed today
+        var settings = new ScanScheduleSettings { Frequency = ScanFrequency.Weekly, DayOfWeek = DayOfWeek.Monday, Hour = 3, Minute = 0 };
+        var from = new DateTime(2025, 1, 13, 17, 0, 0, DateTimeKind.Local); // Monday 5 PM
+
+        var result = ScanSchedule.ComputeNextOccurrence(settings, from);
+
+        var expected = new DateTime(2025, 1, 20, 3, 0, 0, DateTimeKind.Local).ToUniversalTime(); // next Monday
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void ComputeNextOccurrence_Weekly_SameDayTimeNotYetPassed_ReturnsToday()
+    {
+        // Monday Jan 13 1:00 AM — configured Monday 3:00 AM, still ahead today
+        var settings = new ScanScheduleSettings { Frequency = ScanFrequency.Weekly, DayOfWeek = DayOfWeek.Monday, Hour = 3, Minute = 0 };
+        var from = new DateTime(2025, 1, 13, 1, 0, 0, DateTimeKind.Local); // Monday 1 AM
+
+        var result = ScanSchedule.ComputeNextOccurrence(settings, from);
+
+        var expected = new DateTime(2025, 1, 13, 3, 0, 0, DateTimeKind.Local).ToUniversalTime(); // same Monday
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void ComputeNextOccurrence_Weekly_TodayIsTuesdayConfiguredFriday_ReturnsFriday()
+    {
+        // Tuesday Jan 14 10:00 AM — configured Friday 3:00 AM, 3 days forward
+        var settings = new ScanScheduleSettings { Frequency = ScanFrequency.Weekly, DayOfWeek = DayOfWeek.Friday, Hour = 3, Minute = 0 };
+        var from = new DateTime(2025, 1, 14, 10, 0, 0, DateTimeKind.Local); // Tuesday
+
+        var result = ScanSchedule.ComputeNextOccurrence(settings, from);
+
+        var expected = new DateTime(2025, 1, 17, 3, 0, 0, DateTimeKind.Local).ToUniversalTime(); // Friday
+        Assert.Equal(expected, result);
+    }
+
+    // ── GetCheckInterval / GetStaleThreshold for Weekly ───────────────────
+
+    [Fact]
+    public void GetCheckInterval_Weekly_Returns7Days()
+    {
+        var settings = new ScanScheduleSettings { Frequency = ScanFrequency.Weekly };
+        Assert.Equal(TimeSpan.FromDays(7), ScanSchedule.GetCheckInterval(settings));
+    }
+
+    [Fact]
+    public void GetStaleThreshold_Weekly_Returns9Days()
+    {
+        var settings = new ScanScheduleSettings { Frequency = ScanFrequency.Weekly };
+        Assert.Equal(TimeSpan.FromDays(9), ScanSchedule.GetStaleThreshold(settings));
+    }
+
+    // ── Disabled scenarios ─────────────────────────────────────────────────
+
+    [Fact]
+    public void ComputeNextOccurrence_Disabled_ReturnsDateTimeMaxValue()
+    {
+        var settings = new ScanScheduleSettings { Frequency = ScanFrequency.Disabled };
+        var from = new DateTime(2025, 6, 1, 12, 0, 0, DateTimeKind.Local);
+
+        var result = ScanSchedule.ComputeNextOccurrence(settings, from);
+
+        Assert.Equal(DateTime.MaxValue, result);
+    }
+
+    [Fact]
+    public void GetCheckInterval_Disabled_ReturnsTimeSpanMaxValue()
+    {
+        var settings = new ScanScheduleSettings { Frequency = ScanFrequency.Disabled };
+        Assert.Equal(TimeSpan.MaxValue, ScanSchedule.GetCheckInterval(settings));
+    }
+
+    [Fact]
+    public void GetStaleThreshold_Disabled_Returns9Days()
+    {
+        var settings = new ScanScheduleSettings { Frequency = ScanFrequency.Disabled };
+        Assert.Equal(TimeSpan.FromDays(9), ScanSchedule.GetStaleThreshold(settings));
+    }
 }

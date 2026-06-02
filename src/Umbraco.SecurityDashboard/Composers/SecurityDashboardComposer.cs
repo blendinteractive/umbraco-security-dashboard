@@ -67,8 +67,12 @@ public class SecurityDashboardComposer : IComposer
             AllowAutoRedirect = false
         });
 
-        // Recurring background task for scheduled vulnerability checks
-        builder.Services.AddRecurringBackgroundJob<VulnerabilityCheckTask>();
+        // Recurring background task — skipped when scheduling is explicitly disabled
+        var frequencyStr = builder.Config
+            .GetSection(SecurityDashboardSettings.SectionName)
+            .GetSection("ScanSchedule")["Frequency"];
+        if (!string.Equals(frequencyStr, "Disabled", StringComparison.OrdinalIgnoreCase))
+            builder.Services.AddRecurringBackgroundJob<VulnerabilityCheckTask>();
 
         // Startup check: run immediately if last successful check is older than CheckInterval
         builder.AddNotificationAsyncHandler<UmbracoApplicationStartedNotification, StartupVulnerabilityCheckHandler>();
