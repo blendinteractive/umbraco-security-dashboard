@@ -1,6 +1,6 @@
 # security-dashboard Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-05-11
+Auto-generated from all feature plans. Last updated: 2026-06-02
 
 ## Active Technologies
 - C# / .NET 10 (Umbraco 17) + Umbraco.Cms 17.x, Swashbuckle.AspNetCore, NuGet.Versioning, Lit 3, Vite 5, @umbraco-ui/uui, @umbraco-cms/backoffice (001-vulnerability-dashboard)
@@ -15,6 +15,8 @@ Auto-generated from all feature plans. Last updated: 2026-05-11
 - `SecurityDashboard_ManualMitigation` table via NPoco + IScopeProvider (new table, new migration) (006-manual-mitigation-marking)
 - C# 13 / .NET 10 (Umbraco 17 LTS); TypeScript 5, Lit 3 (frontend) + Umbraco.Cms 17.x, NPoco, @umbraco-cms/backoffice, @umbraco-ui/uui — all existing (007-audit-log)
 - Umbraco DB (SQL Server / SQLite) via NPoco + IScopeProvider; new `SecurityDashboard_AuditLog` table (migration `SecurityDashboard-1.2.0`) (007-audit-log)
+- C# 13 / .NET 10 (Umbraco 17 LTS) + TypeScript 5, Lit 3 + Umbraco.Cms 17.x, NSubstitute, xUnit — all existing; **no new NuGet packages** (008-scan-schedule-config)
+- No DB schema change — `NextScheduledCheckAt` is already persisted in `CheckResultRecord` (008-scan-schedule-config)
 
 
 ## Project Structure
@@ -33,9 +35,9 @@ tests/
 C# / .NET 10 (Umbraco 17 LTS): Follow standard conventions
 
 ## Recent Changes
+- 008-scan-schedule-config: Added C# 13 / .NET 10 (Umbraco 17 LTS) + TypeScript 5, Lit 3 + Umbraco.Cms 17.x, NSubstitute, xUnit — all existing; **no new NuGet packages**
 - 007-audit-log: Added C# 13 / .NET 10 (Umbraco 17 LTS); TypeScript 5, Lit 3 (frontend) + Umbraco.Cms 17.x, NPoco, @umbraco-cms/backoffice, @umbraco-ui/uui — all existing
 - 006-manual-mitigation-marking: Added C# / .NET 10 (Umbraco 17 LTS); TypeScript, Lit 3 (frontend) + Umbraco.Cms 17.x, NPoco, @umbraco-ui/uui, @umbraco-cms/backoffice — all existing
-- 005-exposure-vuln-checks: Added C# / .NET 10 (Umbraco 17 LTS) + Umbraco.Cms 17.x — `IUserService`, `IUserGroupService`, `IOptions<DeliveryApiSettings>`, `IScopeProvider` (all existing); no new NuGet packages
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->
@@ -43,5 +45,5 @@ C# / .NET 10 (Umbraco 17 LTS): Follow standard conventions
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/007-audit-log/plan.md
+at specs/008-scan-schedule-config/plan.md
 <!-- SPECKIT END -->

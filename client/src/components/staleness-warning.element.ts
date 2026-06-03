@@ -4,6 +4,7 @@ import { customElement, property } from 'lit/decorators.js';
 @customElement('security-dashboard-staleness-warning')
 export class StalenessWarningElement extends LitElement {
   @property({ type: Boolean }) isStale = false;
+  @property({ type: Boolean }) scanningDisabled = false;
   @property({ type: String }) lastSuccessfulCheckAt: string | null = null;
   @property({ type: Boolean }) lastCheckSucceeded: boolean | null = null;
   @property({ type: String }) lastCheckError: string | null = null;
@@ -28,15 +29,30 @@ export class StalenessWarningElement extends LitElement {
       color: var(--uui-color-danger-contrast, #7b0018);
       font-size: 0.875rem;
     }
+    .disabled-notice {
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: var(--uui-color-danger-surface, #fde8e8);
+      border: 1px solid var(--uui-color-danger, #d0011b);
+      border-radius: 4px;
+      color: black;
+      font-size: 0.875rem;
+    }
   `;
 
   render() {
-    const showStale = this.isStale;
+    const showDisabled = this.scanningDisabled;
+    const showStale = !showDisabled && this.isStale;
     const showFailure = this.lastCheckSucceeded === false;
 
-    if (!showStale && !showFailure) return html``;
+    if (!showDisabled && !showStale && !showFailure) return html``;
 
     return html`
+      ${showDisabled ? html`
+        <div class="disabled-notice">
+          <strong>Automatic scanning is disabled</strong> — set <code>Frequency</code> to <code>Daily</code> or <code>Weekly</code> in <code>appsettings.json</code> to re-enable scheduled checks.
+        </div>
+      ` : ''}
       ${showStale ? html`
         <div class="stale-warning">
           <strong>Data may be outdated</strong> — the last successful check was more than 48 hours ago.

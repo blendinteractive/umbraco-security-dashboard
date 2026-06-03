@@ -53,6 +53,50 @@ When configured, the dashboard posts the scan result to an external endpoint aft
 | `Secret` | Shared secret included in the request header for payload verification. |
 | `TimeoutSeconds` | HTTP timeout for the webhook request. Defaults to `10`. |
 
+### ScanSchedule
+
+Controls when vulnerability scans run. By default, scans run daily at 4:00 AM (server local time).
+
+| Property | Description | Default |
+|---|---|---|
+| `Frequency` | `Daily`, `Weekly`, or `Disabled` | `Daily` |
+| `Hour` | Hour of day (0–23) for the scan to run | `4` |
+| `Minute` | Minute (0–59) for the scan to run | `0` |
+| `DayOfWeek` | Day for weekly scans (`Monday`–`Sunday`) | `Monday` |
+
+**Daily at 2:30 AM:**
+
+```json
+"ScanSchedule": {
+  "Frequency": "Daily",
+  "Hour": 2,
+  "Minute": 30
+}
+```
+
+**Weekly on Monday at 3:00 AM:**
+
+```json
+"ScanSchedule": {
+  "Frequency": "Weekly",
+  "DayOfWeek": "Monday",
+  "Hour": 3,
+  "Minute": 0
+}
+```
+
+**Disabled (no automatic scans):**
+
+```json
+"ScanSchedule": {
+  "Frequency": "Disabled"
+}
+```
+
+When `Disabled`, the background job is not registered and the startup check is skipped entirely. The dashboard displays a prominent warning. This is useful for development or staging environments where you do not want background scans running.
+
+> **Note**: Changes to `ScanSchedule` take effect only after an application restart.
+
 ### Development overrides
 
 The `Development` subsection contains settings that are only applied when the application is running in the `Development` environment. They are silently ignored in all other environments.

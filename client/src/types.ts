@@ -39,6 +39,7 @@ export interface AuditLogPageResponse {
 export interface DashboardStatusResponse {
   overallStatus: 'Safe' | 'Mitigated' | 'Vulnerable' | 'NeverChecked';
   isStale: boolean;
+  scanningDisabled: boolean;
   lastSuccessfulCheckAt: string | null;
   lastCheckAttemptAt: string | null;
   lastCheckSucceeded: boolean | null;

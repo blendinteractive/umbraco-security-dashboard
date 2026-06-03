@@ -36,6 +36,7 @@ export class DashboardHeaderElement extends LitElement {
 
         <security-dashboard-staleness-warning
           .isStale=${s.isStale}
+          .scanningDisabled=${s.scanningDisabled}
           .lastSuccessfulCheckAt=${s.lastSuccessfulCheckAt}
           .lastCheckSucceeded=${s.lastCheckSucceeded}
           .lastCheckError=${s.lastCheckError}>

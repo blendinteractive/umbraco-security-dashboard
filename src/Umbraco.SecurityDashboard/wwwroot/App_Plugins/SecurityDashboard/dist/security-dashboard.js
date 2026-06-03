@@ -286,9 +286,9 @@ O.elementStyles = [], O.shadowRootOptions = { mode: "open" }, O[L("elementProper
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const V = globalThis, _t = (r) => r, X = V.trustedTypes, $t = X ? X.createPolicy("lit-html", { createHTML: (r) => r }) : void 0, Mt = "$lit$", b = `lit$${Math.random().toFixed(9).slice(2)}$`, kt = "?" + b, Ft = `<${kt}>`, M = document, B = () => M.createComment(""), F = (r) => r === null || typeof r != "object" && typeof r != "function", pt = Array.isArray, Wt = (r) => pt(r) || typeof (r == null ? void 0 : r[Symbol.iterator]) == "function", at = `[ 	
+const V = globalThis, _t = (r) => r, X = V.trustedTypes, $t = X ? X.createPolicy("lit-html", { createHTML: (r) => r }) : void 0, kt = "$lit$", b = `lit$${Math.random().toFixed(9).slice(2)}$`, Mt = "?" + b, Ft = `<${Mt}>`, k = document, B = () => k.createComment(""), F = (r) => r === null || typeof r != "object" && typeof r != "function", pt = Array.isArray, Wt = (r) => pt(r) || typeof (r == null ? void 0 : r[Symbol.iterator]) == "function", at = `[ 	
 \f\r]`, z = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, bt = /-->/g, At = />/g, C = RegExp(`>|${at}(?:([^\\s"'>=/]+)(${at}*=${at}*(?:[^ 	
-\f\r"'\`<>=]|("|')|))|$)`, "g"), St = /'/g, wt = /"/g, Ot = /^(?:script|style|textarea|title)$/i, qt = (r) => (t, ...e) => ({ _$litType$: r, strings: t, values: e }), l = qt(1), D = Symbol.for("lit-noChange"), h = Symbol.for("lit-nothing"), xt = /* @__PURE__ */ new WeakMap(), E = M.createTreeWalker(M, 129);
+\f\r"'\`<>=]|("|')|))|$)`, "g"), St = /'/g, wt = /"/g, Ot = /^(?:script|style|textarea|title)$/i, qt = (r) => (t, ...e) => ({ _$litType$: r, strings: t, values: e }), l = qt(1), D = Symbol.for("lit-noChange"), h = Symbol.for("lit-nothing"), xt = /* @__PURE__ */ new WeakMap(), E = k.createTreeWalker(k, 129);
 function Dt(r, t) {
   if (!pt(r) || !r.hasOwnProperty("raw")) throw Error("invalid template strings array");
   return $t !== void 0 ? $t.createHTML(t) : t;
@@ -301,7 +301,7 @@ const Gt = (r, t) => {
     let d, p, u = -1, v = 0;
     for (; v < n.length && (o.lastIndex = v, p = o.exec(n), p !== null); ) v = o.lastIndex, o === z ? p[1] === "!--" ? o = bt : p[1] !== void 0 ? o = At : p[2] !== void 0 ? (Ot.test(p[2]) && (i = RegExp("</" + p[2], "g")), o = C) : p[3] !== void 0 && (o = C) : o === C ? p[0] === ">" ? (o = i ?? z, u = -1) : p[1] === void 0 ? u = -2 : (u = o.lastIndex - p[2].length, d = p[1], o = p[3] === void 0 ? C : p[3] === '"' ? wt : St) : o === wt || o === St ? o = C : o === bt || o === At ? o = z : (o = C, i = void 0);
     const $ = o === C && r[c + 1].startsWith("/>") ? " " : "";
-    a += o === z ? n + Ft : u >= 0 ? (s.push(d), n.slice(0, u) + Mt + n.slice(u) + b + $) : n + b + (u === -2 ? c : $);
+    a += o === z ? n + Ft : u >= 0 ? (s.push(d), n.slice(0, u) + kt + n.slice(u) + b + $) : n + b + (u === -2 ? c : $);
   }
   return [Dt(r, a + (r[e] || "<?>") + (t === 2 ? "</svg>" : t === 3 ? "</math>" : "")), s];
 };
@@ -317,7 +317,7 @@ class W {
     }
     for (; (i = E.nextNode()) !== null && n.length < c; ) {
       if (i.nodeType === 1) {
-        if (i.hasAttributes()) for (const u of i.getAttributeNames()) if (u.endsWith(Mt)) {
+        if (i.hasAttributes()) for (const u of i.getAttributeNames()) if (u.endsWith(kt)) {
           const v = p[o++], $ = i.getAttribute(u).split(b), J = /([.?@])?(.*)/.exec(v);
           n.push({ type: 1, index: a, name: J[2], strings: $, ctor: J[1] === "." ? Zt : J[1] === "?" ? Kt : J[1] === "@" ? Xt : tt }), i.removeAttribute(u);
         } else u.startsWith(b) && (n.push({ type: 6, index: a }), i.removeAttribute(u));
@@ -329,7 +329,7 @@ class W {
             i.append(u[v], B());
           }
         }
-      } else if (i.nodeType === 8) if (i.data === kt) n.push({ type: 2, index: a });
+      } else if (i.nodeType === 8) if (i.data === Mt) n.push({ type: 2, index: a });
       else {
         let u = -1;
         for (; (u = i.data.indexOf(b, u + 1)) !== -1; ) n.push({ type: 7, index: a }), u += b.length - 1;
@@ -338,7 +338,7 @@ class W {
     }
   }
   static createElement(t, e) {
-    const s = M.createElement("template");
+    const s = k.createElement("template");
     return s.innerHTML = t, s;
   }
 }
@@ -360,7 +360,7 @@ class Jt {
     return this._$AM._$AU;
   }
   u(t) {
-    const { el: { content: e }, parts: s } = this._$AD, i = ((t == null ? void 0 : t.creationScope) ?? M).importNode(e, !0);
+    const { el: { content: e }, parts: s } = this._$AD, i = ((t == null ? void 0 : t.creationScope) ?? k).importNode(e, !0);
     E.currentNode = i;
     let a = E.nextNode(), o = 0, c = 0, n = s[0];
     for (; n !== void 0; ) {
@@ -370,7 +370,7 @@ class Jt {
       }
       o !== (n == null ? void 0 : n.index) && (a = E.nextNode(), o++);
     }
-    return E.currentNode = M, i;
+    return E.currentNode = k, i;
   }
   p(t) {
     let e = 0;
@@ -406,7 +406,7 @@ class G {
     this._$AH !== t && (this._$AR(), this._$AH = this.O(t));
   }
   _(t) {
-    this._$AH !== h && F(this._$AH) ? this._$AA.nextSibling.data = t : this.T(M.createTextNode(t)), this._$AH = t;
+    this._$AH !== h && F(this._$AH) ? this._$AA.nextSibling.data = t : this.T(k.createTextNode(t)), this._$AH = t;
   }
   $(t) {
     var a;
@@ -726,7 +726,7 @@ S.styles = y`
       background: var(--uui-color-danger-surface, #fde8e8);
       border: 1px solid var(--uui-color-danger, #d0011b);
       border-radius: 4px;
-      color: var(--uui-color-danger-contrast, #7b0018);
+      color: black;
       font-size: 0.875rem;
     }
   `;
@@ -837,6 +837,7 @@ let Q = class extends f {
 
         <security-dashboard-staleness-warning
           .isStale=${r.isStale}
+          .scanningDisabled=${r.scanningDisabled}
           .lastSuccessfulCheckAt=${r.lastSuccessfulCheckAt}
           .lastCheckSucceeded=${r.lastCheckSucceeded}
           .lastCheckError=${r.lastCheckError}>
@@ -1364,7 +1365,7 @@ var ye = Object.defineProperty, _e = Object.getOwnPropertyDescriptor, st = (r, t
     (o = r[a]) && (i = (s ? o(t, e, i) : o(i)) || i);
   return s && i && ye(t, e, i), i;
 };
-let k = class extends lt(f) {
+let M = class extends lt(f) {
   constructor() {
     super(...arguments), this._status = null, this._loading = !0, this._error = null, this._onMitigationChanged = () => {
       this._fetchStatus();
@@ -1440,7 +1441,7 @@ let k = class extends lt(f) {
     `;
   }
 };
-k.styles = y`
+M.styles = y`
     :host { display: block; padding: 24px; }
     h2 { margin: 0 0 16px; font-size: 1.4rem; }
     .error-box {
@@ -1453,18 +1454,18 @@ k.styles = y`
   `;
 st([
   m()
-], k.prototype, "_status", 2);
+], M.prototype, "_status", 2);
 st([
   m()
-], k.prototype, "_loading", 2);
+], M.prototype, "_loading", 2);
 st([
   m()
-], k.prototype, "_error", 2);
-k = st([
+], M.prototype, "_error", 2);
+M = st([
   _("security-dashboard")
-], k);
-const we = k;
+], M);
+const we = M;
 export {
-  k as SecurityDashboardElement,
+  M as SecurityDashboardElement,
   we as default
 };
