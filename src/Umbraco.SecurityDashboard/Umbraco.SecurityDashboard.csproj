@@ -6,16 +6,21 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>BlendInteractive.Umbraco.SecurityDashboard</PackageId>
     <Version>1.0.0</Version>
-    <Authors>Security Dashboard Contributors</Authors>
+    <Authors>Blend Interactive &amp; Contributors</Authors>
     <Description>The Umbraco Security Dashboard is a package that provides a dashboard within the Umbraco backoffice to help identify potential security vulnerabilities in installed packages. It scans installed packages against known vulnerabilities and can report vulnerabilities to a central location via webhook.</Description>
     <PackageTags>umbraco;security;vulnerability;dashboard;umbraco-marketplace</PackageTags>
     <IsPackable>true</IsPackable>
     <StaticWebAssetBasePath>/</StaticWebAssetBasePath>
     <Title>Umbraco Security Dashboard</Title>
     <PackageProjectUrl>https://github.com/blendinteractive/umbraco-security-dashboard</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/blendinteractive/umbraco-security-dashboard/blob/main/LICENSE.md</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/blendinteractive/umbraco-security-dashboard</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Umbraco.Cms" Version="17.*" />

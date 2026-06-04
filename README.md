@@ -11,7 +11,7 @@ The system also provides checks against common vulnerability exposure points to 
 To add the package to your project, install it with NuGet:
 
 ```bash
-dotnet add package BlendInteractive.SecurityDashboard
+dotnet add package BlendInteractive.Umbraco.SecurityDashboard
 ```
 
 This will add a 'Security Health' tab in the 'Settings' section of your Backoffice.
