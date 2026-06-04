@@ -16,6 +16,9 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/blendinteractive/umbraco-security-dashboard</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>©2026 Blend Interactive</Copyright>
+    <PackageLicenseUrl>https://github.com/blendinteractive/umbraco-security-dashboard/blob/main/LICENSE.md</PackageLicenseUrl>
+    <PackageIcon>wwwroot\App_Plugins\SecurityDashboard\images\status-safe.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
