@@ -48,6 +48,7 @@ jobs:
           dotnet pack src/Umbraco.SecurityDashboard/Umbraco.SecurityDashboard.csproj `
             -c Release `
             /p:Version=${{ inputs.version }} `
+            /p:PublishStaticWebAssets=true `
             -o artifacts/
 
       - name: Sign with SSL.com eSignerCKA
