@@ -75,14 +75,14 @@ jobs:
 
       - name: Publish to NuGet.org
         run: |
-          dotnet nuget push "artifacts/signed/*.nupkg" `
+          dotnet nuget push "artifacts\signed\*.nupkg" `
             --api-key ${{ secrets.NUGET_API_KEY }} `
             --source https://api.nuget.org/v3/index.json `
             --skip-duplicate
 
       - name: Publish to GitHub Packages
         run: |
-          dotnet nuget push "artifacts/signed/*.nupkg" `
+          dotnet nuget push "artifacts\signed\*.nupkg" `
             --api-key ${{ secrets.GITHUB_TOKEN }} `
             --source https://nuget.pkg.github.com/blendinteractive/index.json `
             --skip-duplicate
@@ -94,7 +94,7 @@ jobs:
         run: |
           $releaseArgs = @(
             "v${{ inputs.version }}",
-            "artifacts/signed/BlendInteractive.Umbraco.SecurityDashboard.${{ inputs.version }}.nupkg",
+            "artifacts\signed\BlendInteractive.Umbraco.SecurityDashboard.${{ inputs.version }}.nupkg",
             "--title", "v${{ inputs.version }}",
             "--generate-notes"
           )
