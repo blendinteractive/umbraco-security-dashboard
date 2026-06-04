@@ -1,4 +1,4 @@
-![Umbraco Security Dashboard Shield](https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/refs/heads/main/docs/images/shield.png)
+![Umbraco Security Dashboard Shield](https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/main/docs/images/shield.png)
 
 # Umbraco Security Dashboard
 
@@ -25,7 +25,7 @@ For instance, if the advisory reports an exposure in the Content Delivery API,
 but you have it disabled, then that exposure is mitigated. This helps you
 triage your efforts to focus on the instances where you're actually exposed.
 
-![Security Dashboard Screenshot](https://github.com/blendinteractive/umbraco-security-dashboard/blob/main/docs/screenshots/mitigated.png?raw=true)
+![Security Dashboard Screenshot](https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/main/docs/screenshots/mitigated.png)
 
 ## Prerequisites
 
