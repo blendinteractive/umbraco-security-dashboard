@@ -59,7 +59,7 @@ jobs:
 
       - name: Create signed folder
         run: |
-          mkdir artifacts/signed
+          New-Item -ItemType Directory -Path "artifacts/signed" -Force
           
       - name: Sign with SSL.com eSignerCKA
         uses: sslcom/esigner-codesign@develop
@@ -70,7 +70,7 @@ jobs:
           credential_id: ${{ secrets.SSL_COM_CREDENTIAL_ID }}
           totp_secret: ${{ secrets.SSL_COM_TOTP_SECRET }}
           file_path: artifacts/BlendInteractive.Umbraco.SecurityDashboard.${{ inputs.version }}.nupkg
-          output_path: artifacts/signed/
+          output_path: artifacts/signed
           malware_block: 'false'
 
       - name: Publish to NuGet.org
