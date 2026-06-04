@@ -56,7 +56,11 @@ jobs:
             /p:Version=${{ inputs.version }} `
             /p:PublishStaticWebAssets=true `
             -o artifacts/
-            
+
+      - name: Create signed folder
+        run: |
+          mkdir artifacts/signed
+          
       - name: Sign with SSL.com eSignerCKA
         uses: sslcom/esigner-codesign@develop
         with:
