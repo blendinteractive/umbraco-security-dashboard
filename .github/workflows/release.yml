@@ -51,7 +51,7 @@ jobs:
             -o artifacts/
 
       - name: Sign with SSL.com eSignerCKA
-        uses: sslcom/esigner-codesign@v3
+        uses: sslcom/esigner-codesign@develop
         with:
           command: sign
           username: ${{ secrets.SSL_COM_USERNAME }}
