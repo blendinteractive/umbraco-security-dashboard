@@ -1,0 +1,91 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Package version (e.g. 1.0.1)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install frontend dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: client
+        run: npm run build
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.x'
+
+      - name: Pack NuGet package
+        run: |
+          dotnet pack src/Umbraco.SecurityDashboard/Umbraco.SecurityDashboard.csproj `
+            -c Release `
+            /p:Version=${{ inputs.version }} `
+            -o artifacts/
+
+      - name: Sign with SSL.com eSignerCKA
+        uses: sslcom/esigner-codesign@v3
+        with:
+          command: sign
+          username: ${{ secrets.SSL_COM_USERNAME }}
+          password: ${{ secrets.SSL_COM_PASSWORD }}
+          credential_id: ${{ secrets.SSL_COM_CREDENTIAL_ID }}
+          totp_secret: ${{ secrets.SSL_COM_TOTP_SECRET }}
+          file_path: artifacts/BlendInteractive.Umbraco.SecurityDashboard.${{ inputs.version }}.nupkg
+          output_path: artifacts/signed/
+          malware_block: 'false'
+
+      - name: Publish to NuGet.org
+        run: |
+          dotnet nuget push "artifacts/signed/*.nupkg" `
+            --api-key ${{ secrets.NUGET_API_KEY }} `
+            --source https://api.nuget.org/v3/index.json `
+            --skip-duplicate
+
+      - name: Publish to GitHub Packages
+        run: |
+          dotnet nuget push "artifacts/signed/*.nupkg" `
+            --api-key ${{ secrets.GITHUB_TOKEN }} `
+            --source https://nuget.pkg.github.com/blendinteractive/index.json `
+            --skip-duplicate
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          $releaseArgs = @(
+            "v${{ inputs.version }}",
+            "artifacts/signed/BlendInteractive.Umbraco.SecurityDashboard.${{ inputs.version }}.nupkg",
+            "--title", "v${{ inputs.version }}",
+            "--generate-notes"
+          )
+          if ('${{ inputs.prerelease }}' -eq 'true') { $releaseArgs += '--prerelease' }
+          gh release create @releaseArgs
