@@ -5,8 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>BlendInteractive.Umbraco.SecurityDashboard</PackageId>
-    <Version>1.0.0</Version>
-    <Authors>Blend Interactive &amp; Contributors</Authors>
+    <Version>1.0.1</Version>
+    <Authors>Blend Interactive, Joe Kepley</Authors>
     <Description>The Umbraco Security Dashboard is a package that provides a dashboard within the Umbraco backoffice to help identify potential security vulnerabilities in installed packages. It scans installed packages against known vulnerabilities and can report vulnerabilities to a central location via webhook.</Description>
     <PackageTags>umbraco;security;vulnerability;dashboard;umbraco-marketplace</PackageTags>
     <IsPackable>true</IsPackable>
@@ -17,12 +17,14 @@
     <RepositoryUrl>https://github.com/blendinteractive/umbraco-security-dashboard</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Copyright>©2026 Blend Interactive</Copyright>
-    <PackageLicenseUrl>https://github.com/blendinteractive/umbraco-security-dashboard/blob/main/LICENSE.md</PackageLicenseUrl>
-    <PackageIcon>wwwroot\App_Plugins\SecurityDashboard\images\status-safe.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>icon.png</PackageIcon>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="../../README.md" Pack="true" PackagePath="\" />
+    <None Include="icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
