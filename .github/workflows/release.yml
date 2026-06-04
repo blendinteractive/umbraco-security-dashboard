@@ -43,6 +43,12 @@ jobs:
         with:
           dotnet-version: '10.x'
 
+      - name: Build project
+        run: |
+          dotnet build src/Umbraco.SecurityDashboard/Umbraco.SecurityDashboard.csproj `
+            -c Release `
+            /p:PublishStaticWebAssets=true
+
       - name: Pack NuGet package
         run: |
           dotnet pack src/Umbraco.SecurityDashboard/Umbraco.SecurityDashboard.csproj `
@@ -50,7 +56,7 @@ jobs:
             /p:Version=${{ inputs.version }} `
             /p:PublishStaticWebAssets=true `
             -o artifacts/
-
+            
       - name: Sign with SSL.com eSignerCKA
         uses: sslcom/esigner-codesign@develop
         with:
