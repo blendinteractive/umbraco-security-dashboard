@@ -1,10 +1,36 @@
+![Umbraco Security Dashboard Shield](https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/refs/heads/main/docs/images/shield.png)
+
+# Umbraco Security Dashboard
+
+Centralized security posture management for Umbraco CMS
+
+[![NuGet](https://img.shields.io/nuget/v/BlendInteractive.Umbraco.SecurityDashboard)](https://www.nuget.org/packages/BlendInteractive.Umbraco.SecurityDashboard) [![NuGet Downloads](https://img.shields.io/nuget/dt/BlendInteractive.Umbraco.SecurityDashboard)](https://www.nuget.org/packages/BlendInteractive.Umbraco.SecurityDashboard) [![License](https://img.shields.io/github/license/blendinteractive/umbraco-security-dashboard)](https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/refs/heads/main/LICENSE.md)
+
+---
+
 ## What Is It
 
-If you maintain a lot of Umbraco installs, managing your security health can be a big task. When a new advisory is released, you suddenly have a lot of work to do. 
+If you maintain a lot of Umbraco installs, managing your security health can be
+a big task. When a new advisory is released, you suddenly have a lot of work
+to do.
 
-The Umbraco Security Dashboard helps by providing regular automatic checks of the running code against the Github Vulnerability Database for Umbraco packages and allows you to report the security health status of the instance to a central location via webhook. 
+The Umbraco Security Dashboard helps by providing regular automatic checks of
+the running code against the Github Vulnerability Database for Umbraco packages
+and allows you to report the security health status of the instance to a central
+location via webhook.
 
-The system also provides checks against common vulnerability exposure points to help you understand which advisories your instance is actually susceptible to. For instance, if the advisory reports an exposure in the Content Delivery API, but you have it disabled, then that exposure is mitigated. This helps you triage your efforts to focus on the instances where you're actually exposed.
+The system also provides checks against common vulnerability exposure points to
+help you understand which advisories your instance is actually susceptible to.
+For instance, if the advisory reports an exposure in the Content Delivery API,
+but you have it disabled, then that exposure is mitigated. This helps you
+triage your efforts to focus on the instances where you're actually exposed.
+
+![Security Dashboard Screenshot](https://github.com/blendinteractive/umbraco-security-dashboard/blob/main/docs/screenshots/mitigated.png?raw=true)
+
+## Prerequisites
+
+- Umbraco v17.3.0 or later
+- .NET 10
 
 ## Installing
 
@@ -14,11 +40,24 @@ To add the package to your project, install it with NuGet:
 dotnet add package BlendInteractive.Umbraco.SecurityDashboard
 ```
 
-This will add a 'Security Health' tab in the 'Settings' section of your Backoffice.
+This will add a 'Security Health' tab in the 'Settings' section of
+your Backoffice.
+
+## Central Management
+
+The dashboard view in the admin is helpful, but it's better to have a system to automate and report on the security 
+health of your instance. Whenever a check is run, the result can be published via webhook. There are many ways to 
+use this, but the docs folder contains 
+an [example of an n8n flow](https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/refs/heads/main/docs/sample-n8n-flow.json) 
+that publishes all updates to 
+a [sample Google Sheet](https://docs.google.com/spreadsheets/d/1MkYgdojUB6boXqpqG29wkatcWkLZORSls98KBfXXz-8/edit?usp=sharing).
+Tools like [n8n](https://n8n.io/) or [Zapier](https://zapier.com/) should provide an easy way to set up an automated 
+workflow that fits with your environment.
 
 ## Configuration
 
-All settings live under the `Umbraco:SecurityDashboard` key in `appsettings.json`.
+All settings live under the `Umbraco:SecurityDashboard` key in
+`appsettings.json`.
 
 ```json
 "Umbraco": {
@@ -36,7 +75,8 @@ All settings live under the `Umbraco:SecurityDashboard` key in `appsettings.json
 
 ### AdditionalPackageIds
 
-A list of non-Umbraco NuGet package IDs to include in vulnerability checks. Versions are detected automatically from the runtime dependency graph.
+A list of non-Umbraco NuGet package IDs to include in vulnerability checks.
+Versions are detected automatically from the runtime dependency graph.
 
 ```json
 "AdditionalPackageIds": [ "Serilog", "Newtonsoft.Json" ]
@@ -44,7 +84,9 @@ A list of non-Umbraco NuGet package IDs to include in vulnerability checks. Vers
 
 ### Webhook
 
-When configured, the dashboard posts the scan result to an external endpoint after every check, making it easy to aggregate security status across multiple Umbraco instances.
+When configured, the dashboard posts the scan result to an external endpoint
+after every check, making it easy to aggregate security status across multiple
+Umbraco instances.
 
 | Property | Description |
 |---|---|
@@ -93,13 +135,20 @@ Controls when vulnerability scans run. By default, scans run daily at 4:00 AM (s
 }
 ```
 
-When `Disabled`, the background job is not registered and the startup check is skipped entirely. The dashboard displays a prominent warning. This is useful for development or staging environments where you do not want background scans running.
-
-> **Note**: Changes to `ScanSchedule` take effect only after an application restart.
+When `Disabled`, the background job is not registered and the startup check is
+skipped entirely. The dashboard displays a prominent warning. This is useful
+for development or staging environments where you do not want background
+scans running.
 
 ### Development overrides
 
-The `Development` subsection contains settings that are only applied when the application is running in the `Development` environment. They are silently ignored in all other environments.
+The `Development` subsection contains settings that are only applied when the
+application is running in the `Development` environment. They are silently
+ignored in all other environments.
+
+This is helpful for testing and development of your vulnerability management
+scripts when there are no active vulnerabilities, or for the development of
+the Security Dashboard Package itself.
 
 ```json
 "Umbraco": {
@@ -116,15 +165,24 @@ The `Development` subsection contains settings that are only applied when the ap
 }
 ```
 
-**`PackageVersionOverrides`** — substitute the detected version of any NuGet package with a fixed value. Useful for testing how the dashboard behaves against a specific advisory without actually downgrading the package.
+**`PackageVersionOverrides`** — substitute the detected version of any NuGet
+package with a fixed value. Useful for testing how the dashboard behaves
+against a specific advisory without actually downgrading the package.
 
-**`ExposureCheckOverrides`** — force one or more exposure checks to run for a specific advisory, regardless of whether the corresponding keyword appears in the advisory description. The key is the GHSA ID (e.g. `GHSA-xxxx-yyyy-zzzz`) and the value is a list of exposure check keywords (e.g. `"Content Delivery API"`, `"Non-Admin Backoffice Users"`). Useful for manually exercising exposure checks against a chosen advisory during development.
+**`ExposureCheckOverrides`** — force one or more exposure checks to run for a
+specific advisory, regardless of whether the corresponding keyword appears in
+the advisory description. The key is the GHSA ID (e.g. `GHSA-xxxx-yyyy-zzzz`)
+and the value is a list of exposure check keywords (e.g.
+`"Content Delivery API"`, `"Non-Admin Backoffice Users"`). Useful for manually
+exercising exposure checks against a chosen advisory during development.
 
 ## Contributing
 
 ### Extending ExposureChecks
 
-Exposure checks determine whether your instance is actually susceptible to a given advisory. The package ships with two built-in checks, but you can add your own.
+Exposure checks determine whether your instance is actually susceptible to a
+given advisory. The package ships with two built-in checks, but you can
+add your own.
 
 **1. Implement `IExposureCheck`:**
 
@@ -153,7 +211,9 @@ public class PublicRegistrationExposureCheck : IExposureCheck
 builder.AddExposureCheck<PublicRegistrationExposureCheck>();
 ```
 
-The check runs only when the `Keyword` appears in the advisory text, so it doesn't add overhead for unrelated advisories. If the check throws, the evaluator logs the exception and treats the result as `Vulnerable`.
+The check runs only when the `Keyword` appears in the advisory text, so it
+doesn't add overhead for unrelated advisories. If the check throws, the
+evaluator logs the exception and treats the result as `Vulnerable`.
 
 **Built-in checks:**
 
@@ -164,7 +224,9 @@ The check runs only when the `Keyword` appears in the advisory text, so it doesn
 
 ### Spec-Kit
 
-This project uses [Spec-Kit](https://github.com/your-org/spec-kit) for structured feature development. Feature specifications live in `specs/` and drive the implementation workflow.
+This project uses [Spec-Kit](https://github.com/your-org/spec-kit) for
+structured AI-assisted feature development. Feature specifications live in `specs/`
+and drive the implementation workflow.
 
 ```bash
 # Review the current feature plan
@@ -174,4 +236,5 @@ cat specs/007-audit-log/plan.md
 /speckit-implement
 ```
 
-Each spec directory contains a `plan.md` with the feature design and a `tasks.md` with the implementation checklist. Completed specs are kept for reference.
+Each spec directory contains a `plan.md` with the feature design and a
+`tasks.md` with the implementation checklist. Completed specs are kept for reference.
