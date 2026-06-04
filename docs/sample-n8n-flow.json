@@ -1,0 +1,247 @@
+{
+  "name": "Umbraco Security Dashboard",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "4186c170-ac6f-47c4-a136-c649136496b2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b96df08a-daf0-4b61-8f42-d38fddfce148",
+      "name": "Webhook",
+      "webhookId": "4186c170-ac6f-47c4-a136-c649136496b2"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1MkYgdojUB6boXqpqG29wkatcWkLZORSls98KBfXXz-8",
+          "mode": "list",
+          "cachedResultName": "Umbraco Security Reports",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MkYgdojUB6boXqpqG29wkatcWkLZORSls98KBfXXz-8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Reports",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MkYgdojUB6boXqpqG29wkatcWkLZORSls98KBfXXz-8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Domain": "={{ $json.body.siteUrl }}",
+            "Status": "={{ $json.body.status }}",
+            "Last Checked": "={{ new Date($json.body.checkedAt).toDateTime().format('yyyy-MM-dd HH:mm:ss') }}",
+            "Packages": "={{ $json.body.affectedPackages.map((x)=> x.packageName + ' ' + x.installedVersion).join(\"\\n\") }}",
+            "Previous Status": "={{ $json.body.previousStatus }}",
+            "Next Check": "={{ new Date($json.body.nextScheduledCheckAt).toDateTime().format('yyyy-MM-dd HH:mm:ss') }}",
+            "Last Notice": "={{ $json.body.lastNotice }}",
+            "Last Resolved": "={{ $json.body.lastResolved }}",
+            "Resolution Type": "={{ $json.body.resolutionType }}",
+            "Resolved By": "={{ $json.body.resolvedBy }}"
+          },
+          "matchingColumns": [
+            "Domain"
+          ],
+          "schema": [
+            {
+              "id": "Domain",
+              "displayName": "Domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Previous Status",
+              "displayName": "Previous Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Packages",
+              "displayName": "Packages",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Checked",
+              "displayName": "Last Checked",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Next Check",
+              "displayName": "Next Check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Last Notice",
+              "displayName": "Last Notice",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Last Resolved",
+              "displayName": "Last Resolved",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Resolution Type",
+              "displayName": "Resolution Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Resolved By",
+              "displayName": "Resolved By",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e6d70697-bc02-4a9f-b634-74467b44f09f",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lpNXYcCMwQUJRI4E",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n.blend.dev",
+            "transfer-encoding": "chunked",
+            "content-type": "application/json; charset=utf-8",
+            "x-forwarded-for": "184.83.200.194",
+            "x-forwarded-host": "n8n.blend.dev",
+            "x-forwarded-proto": "https",
+            "x-webhook-secret": "change-me",
+            "accept-encoding": "gzip"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "siteUrl": "https://safe.sddemo.blendinteractivecom",
+            "status": "Mitigated",
+            "previousStatus": "NeverChecked",
+            "checkedAt": "2026-05-11T17:00:37.676941Z",
+            "nextScheduledCheckAt": "2026-05-13T09:00:00",
+            "affectedPackages": [
+              {
+                "packageName": "Umbraco.Cms",
+                "installedVersion": "17.1.1",
+                "advisoryUrl": "https://github.com/advisories/GHSA-vrqc-59mw-qqg7",
+                "severity": "Medium"
+              },
+              {
+                "packageName": "Umbraco.Cms",
+                "installedVersion": "17.1.1",
+                "advisoryUrl": "https://github.com/advisories/GHSA-fpvf-fvp5-996r",
+                "severity": "Medium"
+              }
+            ],
+            "lastNotice": "2026-05-11T16:11:19.480283",
+            "lastResolved": "2026-05-11T16:11:41.541804",
+            "resolutionType": "Manual",
+            "resolvedBy": "Joe Kepley"
+          },
+          "webhookUrl": "https://n8n.blend.dev/webhook/4186c170-ac6f-47c4-a136-c649136496b2",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "e9732527-c07a-48af-8efc-ac927c900b14",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0704445633eb658aabe958b4f755d5e7e97385010f312f25a73e4b05b86c3b69"
+  },
+  "id": "OmVIevG8dGknOuEd",
+  "tags": []
+}
