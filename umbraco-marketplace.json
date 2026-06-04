@@ -2,7 +2,6 @@
   "$schema": "https://marketplace.umbraco.com/umbraco-marketplace-schema.json",
   "Title": "Umbraco Security Dashboard",
   "AlternatePackageNames": [ "Security Dashboard" ],
-  "AlternateCategory": "",
   "AuthorDetails": {
     "Name": "Joe Kepley",
     "Description": "CTO, Blend Interactive",
@@ -19,15 +18,15 @@
   "Tags": [ "Security", "Nuget", "vulnerability", "dashboard", "blend", "blend-interactive" ],
   "Screenshots": [
     {
-      "Url": "https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/docs/screenshots/safe.png",
+      "ImageUrl": "https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/docs/screenshots/safe.png",
       "Caption": "Safe condition"
     },
     {
-      "Url": "https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/docs/screenshots/mitigated.png",
+      "ImageUrl": "https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/docs/screenshots/mitigated.png",
       "Caption": "Mitigated condition"
     },
     {
-      "Url": "https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/docs/screenshots/vulnerable.png",
+      "ImageUrl": "https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/docs/screenshots/vulnerable.png",
       "Caption": "Vulnerable condition"
     }
   ]
