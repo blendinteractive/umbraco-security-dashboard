@@ -27,6 +27,6 @@ public class NonAdminUsersExposureCheck : IExposureCheck
         if (users.Any(u => !u.Groups.Any(g => g.Alias == Constants.Security.AdminGroupAlias)))
             return new ExposureCheckResult(ExposureVerdict.Vulnerable, null);
 
-        return new ExposureCheckResult(ExposureVerdict.Mitigated, "All backoffice users are administrators");
+        return new ExposureCheckResult(ExposureVerdict.Mitigated, "No non-admin backoffice users found.");
     }
 }
