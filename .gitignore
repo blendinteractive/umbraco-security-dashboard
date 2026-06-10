@@ -8,6 +8,7 @@ obj/
 packages/
 .nuget/
 demo/appsettings.Development.json
+Backup/
 
 # NuGet
 *.nupkg
