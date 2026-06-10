@@ -15,7 +15,7 @@ public class NonAdminUsersExposureCheck : IExposureCheck
 
     public string Keyword => "Non-Admin Backoffice Users";
 
-    public async Task<ExposureVerdict> CheckAsync(CancellationToken cancellationToken = default)
+    public async Task<ExposureCheckResult> CheckAsync(CancellationToken cancellationToken = default)
     {
         using var scope = _scopeFactory.CreateScope();
         var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
@@ -24,8 +24,9 @@ public class NonAdminUsersExposureCheck : IExposureCheck
             () => userService.GetAll(0L, int.MaxValue, out _, "username", Direction.Ascending, userGroups: null, filter: (string?)null),
             cancellationToken);
 
-        return users.Any(u => !u.Groups.Any(g => g.Alias == Constants.Security.AdminGroupAlias))
+        var verdict = users.Any(u => !u.Groups.Any(g => g.Alias == Constants.Security.AdminGroupAlias))
             ? ExposureVerdict.Vulnerable
             : ExposureVerdict.Mitigated;
+        return new ExposureCheckResult(verdict, null);
     }
 }

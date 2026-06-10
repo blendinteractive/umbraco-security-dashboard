@@ -13,24 +13,24 @@ public class ExposureCheckEvaluator : IExposureCheckEvaluator
         _logger = logger;
     }
 
-    public async Task<string> EvaluateAsync(IEnumerable<string> keywords, CancellationToken cancellationToken = default)
+    public async Task<ExposureEvaluationResult> EvaluateAsync(IEnumerable<string> keywords, CancellationToken cancellationToken = default)
     {
         var keywordSet = new HashSet<string>(keywords);
         if (keywordSet.Count == 0)
-            return nameof(ExposureVerdict.Vulnerable);
+            return new ExposureEvaluationResult(nameof(ExposureVerdict.Vulnerable), null);
 
         var matchingChecks = _checks.Where(c => keywordSet.Contains(c.Keyword)).ToList();
         if (matchingChecks.Count == 0)
-            return nameof(ExposureVerdict.Vulnerable);
+            return new ExposureEvaluationResult(nameof(ExposureVerdict.Vulnerable), null);
 
-        var verdictTasks = matchingChecks.Select(check => RunSafeAsync(check, cancellationToken));
-        var verdicts = await Task.WhenAll(verdictTasks);
+        var resultTasks = matchingChecks.Select(check => RunSafeAsync(check, cancellationToken));
+        var results = await Task.WhenAll(resultTasks);
 
-        var worst = verdicts.Max();
-        return worst.ToString();
+        var worst = results.Max(r => r.Verdict);
+        return new ExposureEvaluationResult(worst.ToString(), null);
     }
 
-    private async Task<ExposureVerdict> RunSafeAsync(IExposureCheck check, CancellationToken cancellationToken)
+    private async Task<ExposureCheckResult> RunSafeAsync(IExposureCheck check, CancellationToken cancellationToken)
     {
         try
         {
@@ -39,7 +39,7 @@ public class ExposureCheckEvaluator : IExposureCheckEvaluator
         catch (Exception ex)
         {
             _logger.LogError(ex, "Exposure check '{Keyword}' threw an exception; treating as Vulnerable.", check.Keyword);
-            return ExposureVerdict.Vulnerable;
+            return new ExposureCheckResult(ExposureVerdict.Vulnerable);
         }
     }
 }

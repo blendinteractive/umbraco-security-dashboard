@@ -51,7 +51,7 @@ public class NonAdminUsersExposureCheckTests
     {
         var sut = CreateSut([]);
         var result = await sut.CheckAsync();
-        Assert.Equal(ExposureVerdict.Mitigated, result);
+        Assert.Equal(ExposureVerdict.Mitigated, result.Verdict);
     }
 
     [Fact]
@@ -60,7 +60,7 @@ public class NonAdminUsersExposureCheckTests
         var adminUser = MakeUser(Constants.Security.AdminGroupAlias);
         var sut = CreateSut([adminUser]);
         var result = await sut.CheckAsync();
-        Assert.Equal(ExposureVerdict.Mitigated, result);
+        Assert.Equal(ExposureVerdict.Mitigated, result.Verdict);
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class NonAdminUsersExposureCheckTests
         var nonAdminUser = MakeUser("editor");
         var sut = CreateSut([nonAdminUser]);
         var result = await sut.CheckAsync();
-        Assert.Equal(ExposureVerdict.Vulnerable, result);
+        Assert.Equal(ExposureVerdict.Vulnerable, result.Verdict);
     }
 
     [Fact]
@@ -79,6 +79,6 @@ public class NonAdminUsersExposureCheckTests
         var nonAdminUser = MakeUser("editor");
         var sut = CreateSut([adminUser, nonAdminUser]);
         var result = await sut.CheckAsync();
-        Assert.Equal(ExposureVerdict.Vulnerable, result);
+        Assert.Equal(ExposureVerdict.Vulnerable, result.Verdict);
     }
 }

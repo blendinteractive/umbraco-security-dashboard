@@ -10,5 +10,5 @@ public enum ExposureVerdict
 public interface IExposureCheck
 {
     string Keyword { get; }
-    Task<ExposureVerdict> CheckAsync(CancellationToken cancellationToken = default);
+    Task<ExposureCheckResult> CheckAsync(CancellationToken cancellationToken = default);
 }

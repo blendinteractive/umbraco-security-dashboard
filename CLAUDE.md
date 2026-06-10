@@ -45,5 +45,5 @@ C# / .NET 10 (Umbraco 17 LTS): Follow standard conventions
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/008-scan-schedule-config/plan.md
+at specs/009-exposure-mitigation-desc/plan.md
 <!-- SPECKIT END -->

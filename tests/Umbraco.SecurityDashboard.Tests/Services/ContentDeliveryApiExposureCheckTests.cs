@@ -15,7 +15,7 @@ public class ContentDeliveryApiExposureCheckTests
     {
         var sut = CreateSut(enabled: true);
         var result = await sut.CheckAsync();
-        Assert.Equal(ExposureVerdict.Vulnerable, result);
+        Assert.Equal(ExposureVerdict.Vulnerable, result.Verdict);
     }
 
     [Fact]
@@ -23,6 +23,6 @@ public class ContentDeliveryApiExposureCheckTests
     {
         var sut = CreateSut(enabled: false);
         var result = await sut.CheckAsync();
-        Assert.Equal(ExposureVerdict.Mitigated, result);
+        Assert.Equal(ExposureVerdict.Mitigated, result.Verdict);
     }
 }

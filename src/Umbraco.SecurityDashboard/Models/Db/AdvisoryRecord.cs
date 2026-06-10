@@ -17,4 +17,5 @@ public class AdvisoryRecord
     public DateTime PublishedAt { get; set; }
     public string? InstalledVersion { get; set; }
     public string AffectedStatus { get; set; } = string.Empty;
+    public string? ExposureCheckDescription { get; set; }
 }

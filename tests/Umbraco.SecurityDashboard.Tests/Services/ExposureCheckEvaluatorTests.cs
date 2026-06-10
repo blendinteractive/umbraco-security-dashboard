@@ -15,7 +15,7 @@ public class ExposureCheckEvaluatorTests
     {
         var sut = CreateSut();
         var result = await sut.EvaluateAsync([]);
-        Assert.Equal("Vulnerable", result);
+        Assert.Equal("Vulnerable", result.Verdict);
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public class ExposureCheckEvaluatorTests
         check.Keyword.Returns("Some Other Keyword");
         var sut = CreateSut(check);
         var result = await sut.EvaluateAsync(["Non-Admin Backoffice Users"]);
-        Assert.Equal("Vulnerable", result);
+        Assert.Equal("Vulnerable", result.Verdict);
     }
 
     [Fact]
@@ -33,10 +33,10 @@ public class ExposureCheckEvaluatorTests
     {
         var check = Substitute.For<IExposureCheck>();
         check.Keyword.Returns("Non-Admin Backoffice Users");
-        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(ExposureVerdict.Mitigated);
+        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(new ExposureCheckResult(ExposureVerdict.Mitigated));
         var sut = CreateSut(check);
         var result = await sut.EvaluateAsync(["Non-Admin Backoffice Users"]);
-        Assert.Equal("Mitigated", result);
+        Assert.Equal("Mitigated", result.Verdict);
     }
 
     [Fact]
@@ -44,10 +44,10 @@ public class ExposureCheckEvaluatorTests
     {
         var check = Substitute.For<IExposureCheck>();
         check.Keyword.Returns("Non-Admin Backoffice Users");
-        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(ExposureVerdict.Vulnerable);
+        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(new ExposureCheckResult(ExposureVerdict.Vulnerable));
         var sut = CreateSut(check);
         var result = await sut.EvaluateAsync(["Non-Admin Backoffice Users"]);
-        Assert.Equal("Vulnerable", result);
+        Assert.Equal("Vulnerable", result.Verdict);
     }
 
     [Fact]
@@ -55,15 +55,15 @@ public class ExposureCheckEvaluatorTests
     {
         var mitigatedCheck = Substitute.For<IExposureCheck>();
         mitigatedCheck.Keyword.Returns("Keyword A");
-        mitigatedCheck.CheckAsync(Arg.Any<CancellationToken>()).Returns(ExposureVerdict.Mitigated);
+        mitigatedCheck.CheckAsync(Arg.Any<CancellationToken>()).Returns(new ExposureCheckResult(ExposureVerdict.Mitigated));
 
         var vulnerableCheck = Substitute.For<IExposureCheck>();
         vulnerableCheck.Keyword.Returns("Keyword B");
-        vulnerableCheck.CheckAsync(Arg.Any<CancellationToken>()).Returns(ExposureVerdict.Vulnerable);
+        vulnerableCheck.CheckAsync(Arg.Any<CancellationToken>()).Returns(new ExposureCheckResult(ExposureVerdict.Vulnerable));
 
         var sut = CreateSut(mitigatedCheck, vulnerableCheck);
         var result = await sut.EvaluateAsync(["Keyword A", "Keyword B"]);
-        Assert.Equal("Vulnerable", result);
+        Assert.Equal("Vulnerable", result.Verdict);
     }
 
     [Fact]
@@ -74,7 +74,7 @@ public class ExposureCheckEvaluatorTests
         check.CheckAsync(Arg.Any<CancellationToken>()).ThrowsAsync(new InvalidOperationException("boom"));
         var sut = CreateSut(check);
         var result = await sut.EvaluateAsync(["Explosive Keyword"]);
-        Assert.Equal("Vulnerable", result);
+        Assert.Equal("Vulnerable", result.Verdict);
     }
 
     [Fact]
@@ -82,10 +82,10 @@ public class ExposureCheckEvaluatorTests
     {
         var check = Substitute.For<IExposureCheck>();
         check.Keyword.Returns("Safe Keyword");
-        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(ExposureVerdict.NotAffected);
+        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(new ExposureCheckResult(ExposureVerdict.NotAffected));
         var sut = CreateSut(check);
         var result = await sut.EvaluateAsync(["Safe Keyword"]);
-        Assert.Equal("NotAffected", result);
+        Assert.Equal("NotAffected", result.Verdict);
     }
 
     [Fact]
@@ -96,10 +96,10 @@ public class ExposureCheckEvaluatorTests
         // Worst-case of matching checks is Mitigated.
         var check = Substitute.For<IExposureCheck>();
         check.Keyword.Returns("Registered Keyword");
-        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(ExposureVerdict.Mitigated);
+        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(new ExposureCheckResult(ExposureVerdict.Mitigated));
         var sut = CreateSut(check);
         var result = await sut.EvaluateAsync(["Registered Keyword", "Unregistered Keyword"]);
-        Assert.Equal("Mitigated", result);
+        Assert.Equal("Mitigated", result.Verdict);
     }
 
     [Fact]
@@ -108,7 +108,7 @@ public class ExposureCheckEvaluatorTests
         // Explicit fail-safe: no keywords parsed from description → default to Vulnerable.
         var sut = CreateSut();
         var result = await sut.EvaluateAsync([]);
-        Assert.Equal("Vulnerable", result);
+        Assert.Equal("Vulnerable", result.Verdict);
     }
 
     [Fact]
@@ -117,9 +117,9 @@ public class ExposureCheckEvaluatorTests
         // Explicit fail-safe: keywords present but none matches any registered check → Vulnerable.
         var check = Substitute.For<IExposureCheck>();
         check.Keyword.Returns("Registered Check");
-        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(ExposureVerdict.Mitigated);
+        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(new ExposureCheckResult(ExposureVerdict.Mitigated));
         var sut = CreateSut(check);
         var result = await sut.EvaluateAsync(["Completely Unknown Keyword"]);
-        Assert.Equal("Vulnerable", result);
+        Assert.Equal("Vulnerable", result.Verdict);
     }
 }
