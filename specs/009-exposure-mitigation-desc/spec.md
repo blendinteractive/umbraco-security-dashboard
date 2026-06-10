@@ -41,7 +41,7 @@ A security administrator leaves the dashboard and returns later. Previously miti
 ### Edge Cases
 
 - What happens when an exposure check returns "Mitigated" but provides no description? The advisory should still show "Mitigated" status but display a generic fallback (e.g., "Mitigated by exposure check").
-- What happens when multiple exposure checks all return "Mitigated" for a single advisory? A combined or representative description should be shown rather than silently discarding details.
+- What happens when multiple exposure checks all return "Mitigated" for a single advisory? All descriptions are joined into a single string separated by a delimiter (e.g., "Content Delivery API is disabled; Non-admin backoffice users not present") so no mitigation reason is silently discarded.
 - What happens when a vulnerability is mitigated by both a manual mitigation and an exposure check? The manual mitigation description takes precedence (matching existing priority behavior).
 
 ## Requirements *(mandatory)*
@@ -49,7 +49,7 @@ A security administrator leaves the dashboard and returns later. Previously miti
 ### Functional Requirements
 
 - **FR-001**: Each exposure check MUST be able to provide a human-readable description of why it considers a vulnerability mitigated.
-- **FR-002**: When the vulnerability scan records an advisory with a "Mitigated" status determined by an exposure check, the system MUST persist the corresponding mitigation description alongside the advisory result.
+- **FR-002**: When the vulnerability scan records an advisory with a "Mitigated" status determined by one or more exposure checks, the system MUST persist the combined mitigation description (all contributing descriptions joined) alongside the advisory result.
 - **FR-003**: The dashboard MUST display the mitigation description for any advisory whose status was set to "Mitigated" by an exposure check.
 - **FR-004**: The mitigation description MUST be stored as part of the scan result so it remains available after the scan completes without requiring a live re-evaluation.
 - **FR-005**: Existing manual mitigation descriptions MUST continue to display correctly and take precedence when both a manual mitigation and an exposure-check mitigation exist for the same advisory.
@@ -71,6 +71,13 @@ A security administrator leaves the dashboard and returns later. Previously miti
 - **SC-004**: Mitigation descriptions are available immediately after a completed scan, with no additional user action required.
 - **SC-005**: When the configuration condition that caused mitigation changes (e.g., Content Delivery API is re-enabled), the description disappears after the next scan and the advisory returns to its correct status.
 
+## Clarifications
+
+### Session 2026-06-10
+
+- Q: When multiple exposure checks all return "Mitigated" for the same advisory, how should their descriptions be combined? → A: Show all descriptions joined (e.g., semicolon-separated), so no mitigation reason is silently discarded.
+- Q: Should this feature extend the audit log to record per-advisory auto-mitigation events? → A: No — audit log remains scan-level only; mitigation descriptions are visible on the dashboard.
+
 ## Assumptions
 
 - Each exposure check knows its own mitigation reason and can express it as a short string; no external lookup or translation layer is needed.
@@ -79,3 +86,4 @@ A security administrator leaves the dashboard and returns later. Previously miti
 - The feature does not add a mitigation description for the "Vulnerable" or "NotAffected" verdicts — only "Mitigated" receives a description.
 - The UI treatment for an exposure-check mitigation description matches or closely resembles the existing manual mitigation description display, minimizing UI complexity.
 - Mobile / small-screen support is out of scope; the dashboard already targets desktop backoffice users.
+- The audit log is not extended by this feature; it remains at scan-level granularity. Advisory-level mitigation detail is surfaced only through the dashboard.
