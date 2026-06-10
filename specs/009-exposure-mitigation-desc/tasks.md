@@ -82,11 +82,11 @@
 
 ### Tests for User Story 2 ⚠️ Write FIRST — confirm FAIL before implementing
 
-- [ ] T025 [US2] Add failing test verifying that when `VulnerabilityService` saves scan results, `ExposureEvaluationResult.MitigationDescription` is assigned to `AdvisoryRecord.ExposureCheckDescription` before the record is written to the DB in `tests/Umbraco.SecurityDashboard.Tests/Services/VulnerabilityServiceTests.cs`
+- [X] T025 [US2] Add failing test verifying that when `VulnerabilityService` saves scan results, `ExposureEvaluationResult.MitigationDescription` is assigned to `AdvisoryRecord.ExposureCheckDescription` before the record is written to the DB in `tests/Umbraco.SecurityDashboard.Tests/Services/VulnerabilityServiceTests.cs`
 
 ### Implementation for User Story 2
 
-- [ ] T026 [US2] Update `VulnerabilityService` scan-save path: after receiving `ExposureEvaluationResult` from `EvaluateAsync`, set `advisoryRecord.ExposureCheckDescription = evaluationResult.MitigationDescription` before inserting/updating the record in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`
+- [X] T026 [US2] Update `VulnerabilityService` scan-save path: after receiving `ExposureEvaluationResult` from `EvaluateAsync`, set `advisoryRecord.ExposureCheckDescription = evaluationResult.MitigationDescription` before inserting/updating the record in `src/Umbraco.SecurityDashboard/Services/VulnerabilityService.cs`
 
 **Checkpoint**: Run `dotnet test` — T025 passes. Navigate away from dashboard and return; descriptions are still shown (read from DB, not recomputed).
 
@@ -94,9 +94,9 @@
 
 ## Phase 5: Polish & Cross-Cutting Concerns
 
-- [ ] T027 Run `dotnet test tests/Umbraco.SecurityDashboard.Tests` and confirm 0 failures across all test files
-- [ ] T028 [P] Build frontend to confirm TypeScript compiles with no errors: run `npm run build` (or `vite build`) in `client/`
-- [ ] T029 [P] Validate end-to-end via demo app per quickstart.md: `dotnet run --project src/Umbraco.SecurityDashboard.Demo`, trigger a manual scan, and confirm that (a) a Mitigated advisory shows its description, (b) a manually mitigated advisory still shows the manual description unchanged
+- [X] T027 Run `dotnet test tests/Umbraco.SecurityDashboard.Tests` and confirm 0 failures across all test files
+- [X] T028 [P] Build frontend to confirm TypeScript compiles with no errors: run `npm run build` (or `vite build`) in `client/`
+- [X] T029 [P] Validate end-to-end via demo app per quickstart.md: `dotnet run --project src/Umbraco.SecurityDashboard.Demo`, trigger a manual scan, and confirm that (a) a Mitigated advisory shows its description, (b) a manually mitigated advisory still shows the manual description unchanged
 
 ---
 
