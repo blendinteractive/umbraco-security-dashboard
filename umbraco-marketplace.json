@@ -7,7 +7,7 @@
     "Name": "Joe Kepley",
     "Description": "CTO, Blend Interactive",
     "Url": "https://www.blendinteractive.com/about/team/joe-kepley/",
-    "ImageUrl": "https://gravatar.com/avatar/9a722ebc29ff37779043e95a4a3de7d9ad1144a52d3fcb14b15e5ceb6b25e4e0?v=1780514357000&size=256&d=initials"
+    "ImageUrl": "http://github.com/joekepley.png"
   },
   "Category": "Developer Tools",
   "Description": "The Umbraco Security Dashboard is a package that provides a dashboard within the Umbraco backoffice to help identify potential security vulnerabilities in installed packages. It scans installed packages against known vulnerabilities and can report vulnerabilities to a central location via webhook.",
@@ -19,15 +19,15 @@
   "Tags": [ "Security", "Nuget", "vulnerability", "dashboard", "blend", "blend-interactive" ],
   "Screenshots": [
     {
-      "ImageUrl": "https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/docs/screenshots/safe.png",
+      "ImageUrl": "https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/refs/heads/main/docs/screenshots/safe.png",
       "Caption": "Safe condition"
     },
     {
-      "ImageUrl": "https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/docs/screenshots/mitigated.png",
+      "ImageUrl": "https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/refs/heads/main/docs/screenshots/mitigated.png",
       "Caption": "Mitigated condition"
     },
     {
-      "ImageUrl": "https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/docs/screenshots/vulnerable.png",
+      "ImageUrl": "https://raw.githubusercontent.com/blendinteractive/umbraco-security-dashboard/refs/heads/main/docs/screenshots/vulnerable.png",
       "Caption": "Vulnerable condition"
     }
   ]
