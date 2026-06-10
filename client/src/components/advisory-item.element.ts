@@ -116,6 +116,11 @@ export class AdvisoryItemElement extends LitElement {
                 </span>
                 <div class="attribution-description">${this.advisory.manualMitigation.description}</div>
               </div>
+            ` : this.advisory.affectedStatus === 'Mitigated' && this.advisory.exposureCheckMitigationDescription ? html`
+              <div class="mitigation-attribution">
+                <span class="attribution-who">Auto-mitigated</span>
+                <div class="attribution-description">${this.advisory.exposureCheckMitigationDescription}</div>
+              </div>
             ` : ''}
           </div>
           ${canMark ? html`

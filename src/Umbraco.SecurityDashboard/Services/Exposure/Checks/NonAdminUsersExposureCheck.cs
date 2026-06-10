@@ -24,9 +24,9 @@ public class NonAdminUsersExposureCheck : IExposureCheck
             () => userService.GetAll(0L, int.MaxValue, out _, "username", Direction.Ascending, userGroups: null, filter: (string?)null),
             cancellationToken);
 
-        var verdict = users.Any(u => !u.Groups.Any(g => g.Alias == Constants.Security.AdminGroupAlias))
-            ? ExposureVerdict.Vulnerable
-            : ExposureVerdict.Mitigated;
-        return new ExposureCheckResult(verdict, null);
+        if (users.Any(u => !u.Groups.Any(g => g.Alias == Constants.Security.AdminGroupAlias)))
+            return new ExposureCheckResult(ExposureVerdict.Vulnerable, null);
+
+        return new ExposureCheckResult(ExposureVerdict.Mitigated, "All backoffice users are administrators");
     }
 }

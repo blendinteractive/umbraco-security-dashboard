@@ -81,4 +81,32 @@ public class NonAdminUsersExposureCheckTests
         var result = await sut.CheckAsync();
         Assert.Equal(ExposureVerdict.Vulnerable, result.Verdict);
     }
+
+    // --- T016: Description tests ---
+
+    [Fact]
+    public async Task CheckAsync_EmptyUserList_ReturnsMitigationDescription()
+    {
+        var sut = CreateSut([]);
+        var result = await sut.CheckAsync();
+        Assert.Equal("All backoffice users are administrators", result.MitigationDescription);
+    }
+
+    [Fact]
+    public async Task CheckAsync_AllUsersAreAdmins_ReturnsMitigationDescription()
+    {
+        var adminUser = MakeUser(Constants.Security.AdminGroupAlias);
+        var sut = CreateSut([adminUser]);
+        var result = await sut.CheckAsync();
+        Assert.Equal("All backoffice users are administrators", result.MitigationDescription);
+    }
+
+    [Fact]
+    public async Task CheckAsync_OneNonAdminUser_MitigationDescriptionIsNull()
+    {
+        var nonAdminUser = MakeUser("editor");
+        var sut = CreateSut([nonAdminUser]);
+        var result = await sut.CheckAsync();
+        Assert.Null(result.MitigationDescription);
+    }
 }

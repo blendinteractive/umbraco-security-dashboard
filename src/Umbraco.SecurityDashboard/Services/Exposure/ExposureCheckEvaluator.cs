@@ -27,7 +27,18 @@ public class ExposureCheckEvaluator : IExposureCheckEvaluator
         var results = await Task.WhenAll(resultTasks);
 
         var worst = results.Max(r => r.Verdict);
-        return new ExposureEvaluationResult(worst.ToString(), null);
+
+        string? description = null;
+        if (worst == ExposureVerdict.Mitigated)
+        {
+            var parts = results
+                .Where(r => r.Verdict == ExposureVerdict.Mitigated && r.MitigationDescription != null)
+                .Select(r => r.MitigationDescription!);
+            var joined = string.Join("; ", parts);
+            description = joined.Length > 0 ? joined : "Mitigated by exposure check";
+        }
+
+        return new ExposureEvaluationResult(worst.ToString(), description);
     }
 
     private async Task<ExposureCheckResult> RunSafeAsync(IExposureCheck check, CancellationToken cancellationToken)

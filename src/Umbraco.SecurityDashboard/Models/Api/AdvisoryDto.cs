@@ -27,4 +27,6 @@ public class AdvisoryDto
     public List<AdvisoryPackageDto> Packages { get; set; } = [];
 
     public ManualMitigationDto? ManualMitigation { get; set; }
+
+    public string? ExposureCheckMitigationDescription { get; set; }
 }

@@ -20,6 +20,7 @@ export interface AdvisoryDto {
   affectedStatus: 'Vulnerable' | 'Mitigated' | 'NotAffected' | 'Unknown';
   packages: AdvisoryPackageDto[];
   manualMitigation: ManualMitigationDto | null;
+  exposureCheckMitigationDescription?: string;
 }
 
 export interface AuditLogEntryDto {

@@ -122,4 +122,59 @@ public class ExposureCheckEvaluatorTests
         var result = await sut.EvaluateAsync(["Completely Unknown Keyword"]);
         Assert.Equal("Vulnerable", result.Verdict);
     }
+
+    // --- T014: Description combining tests ---
+
+    [Fact]
+    public async Task EvaluateAsync_SingleMitigatedCheckWithDescription_ReturnsThatDescription()
+    {
+        var check = Substitute.For<IExposureCheck>();
+        check.Keyword.Returns("Content Delivery API");
+        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(new ExposureCheckResult(ExposureVerdict.Mitigated, "Content Delivery API is disabled"));
+        var sut = CreateSut(check);
+        var result = await sut.EvaluateAsync(["Content Delivery API"]);
+        Assert.Equal("Mitigated", result.Verdict);
+        Assert.Equal("Content Delivery API is disabled", result.MitigationDescription);
+    }
+
+    [Fact]
+    public async Task EvaluateAsync_TwoMitigatedChecksWithDescriptions_JoinsWithSemicolon()
+    {
+        var check1 = Substitute.For<IExposureCheck>();
+        check1.Keyword.Returns("Content Delivery API");
+        check1.CheckAsync(Arg.Any<CancellationToken>()).Returns(new ExposureCheckResult(ExposureVerdict.Mitigated, "Content Delivery API is disabled"));
+
+        var check2 = Substitute.For<IExposureCheck>();
+        check2.Keyword.Returns("Non-Admin Backoffice Users");
+        check2.CheckAsync(Arg.Any<CancellationToken>()).Returns(new ExposureCheckResult(ExposureVerdict.Mitigated, "All backoffice users are administrators"));
+
+        var sut = CreateSut(check1, check2);
+        var result = await sut.EvaluateAsync(["Content Delivery API", "Non-Admin Backoffice Users"]);
+        Assert.Equal("Mitigated", result.Verdict);
+        Assert.Equal("Content Delivery API is disabled; All backoffice users are administrators", result.MitigationDescription);
+    }
+
+    [Fact]
+    public async Task EvaluateAsync_MitigatedCheckWithNullDescription_UsesFallback()
+    {
+        var check = Substitute.For<IExposureCheck>();
+        check.Keyword.Returns("Non-Admin Backoffice Users");
+        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(new ExposureCheckResult(ExposureVerdict.Mitigated, null));
+        var sut = CreateSut(check);
+        var result = await sut.EvaluateAsync(["Non-Admin Backoffice Users"]);
+        Assert.Equal("Mitigated", result.Verdict);
+        Assert.Equal("Mitigated by exposure check", result.MitigationDescription);
+    }
+
+    [Fact]
+    public async Task EvaluateAsync_VulnerableVerdict_MitigationDescriptionIsNull()
+    {
+        var check = Substitute.For<IExposureCheck>();
+        check.Keyword.Returns("Content Delivery API");
+        check.CheckAsync(Arg.Any<CancellationToken>()).Returns(new ExposureCheckResult(ExposureVerdict.Vulnerable, null));
+        var sut = CreateSut(check);
+        var result = await sut.EvaluateAsync(["Content Delivery API"]);
+        Assert.Equal("Vulnerable", result.Verdict);
+        Assert.Null(result.MitigationDescription);
+    }
 }
